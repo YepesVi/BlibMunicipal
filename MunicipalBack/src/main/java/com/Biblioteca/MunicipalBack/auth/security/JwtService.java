@@ -5,53 +5,59 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.Biblioteca.MunicipalBack.shared.enums.UserRole;
+
 import java.util.Date;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 
 @Service
 public class JwtService {
 
-    @Value("${security.jwt.secret}")
+   @Value("${security.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${security.jwt.expiration-ms}")
-    private long jwtExpirationMs;
+    @Value("${security.jwt.access-expiration-ms}")
+    private long accessExpirationMs;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateAccessToken(Long userId, String username, UserRole role) {
         return Jwts.builder()
-                .subject(userDetails.getUsername()) 
-                .issuedAt(new Date())                
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSignInKey()) 
+                .subject(username)
+                .claims(Map.of(
+                        "uid", userId,
+                        "role", role.name()
+                ))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + accessExpirationMs))
+                .signWith(getSigningKey())
                 .compact();
     }
 
     public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+        return extractClaims(token).getSubject();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, String expectedUsername) {
         String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(expectedUsername) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        return extractClaims(token).getExpiration().before(new Date());
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser() 
-                .verifyWith(getSignInKey()) 
+    private Claims extractClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseSignedClaims(token)  
+                .parseSignedClaims(token)
                 .getPayload();
     }
 
-    private SecretKey getSignInKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }

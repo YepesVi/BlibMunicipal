@@ -1,7 +1,5 @@
 package com.Biblioteca.MunicipalBack.users.controller;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +11,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
-import com.Biblioteca.MunicipalBack.users.dto.UserRequest;
+import com.Biblioteca.MunicipalBack.shared.dto.PageResponse;
+import com.Biblioteca.MunicipalBack.shared.enums.UserRole;
+import com.Biblioteca.MunicipalBack.users.dto.CreateUserRequest;
+import com.Biblioteca.MunicipalBack.users.dto.UpdateUserRequest;
 import com.Biblioteca.MunicipalBack.users.dto.UserResponse;
 import com.Biblioteca.MunicipalBack.users.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -29,13 +31,20 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@Valid @RequestBody UserRequest request) {
+    public UserResponse create(@Valid @RequestBody CreateUserRequest request) {
         return userService.create(request);
     }
 
     @GetMapping
-    public List<UserResponse> findAll() {
-        return userService.findAll();
+    public PageResponse<UserResponse> findAll(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) UserRole role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return userService.findAll(username, role, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/{id}")
@@ -44,7 +53,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponse update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+    public UserResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request
+    ) {
         return userService.update(id, request);
     }
 
