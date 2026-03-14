@@ -2,7 +2,6 @@ package com.Biblioteca.MunicipalBack.auth.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -43,8 +42,14 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/catalog/**")
+                            .hasAnyRole("ADMIN", "EMPLOYEE")
+                        .requestMatchers("/api/catalog/**")
+                            .hasRole("ADMIN")
+                        .requestMatchers("/api/media/**")
+                            .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
