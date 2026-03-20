@@ -1,0 +1,79 @@
+.categories-page {
+  margin: 2rem;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .category-form {
+    display: grid;
+    gap: 0.7rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.3rem;
+    font-weight: 600;
+  }
+
+  input,
+  textarea,
+  select {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    font: inherit;
+  }
+
+  button {
+    border: 1px solid #bdbdbd;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  th,
+  td {
+    text-align: left;
+    border-bottom: 1px solid #e9e9e9;
+    padding: 0.75rem;
+  }
+
+  th {
+    background: #f7f7f7;
+  }
+
+  .actions-cell {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .danger {
+    border-color: #ef4444;
+    color: #b91c1c;
+  }
+}
+
+.error {
+  color: #b91c1c;
+}

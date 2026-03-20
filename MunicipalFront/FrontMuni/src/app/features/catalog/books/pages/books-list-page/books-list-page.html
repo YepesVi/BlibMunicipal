@@ -1,0 +1,108 @@
+<section class="books-page">
+  <header>
+    <h1>Books</h1>
+    <div class="actions">
+      @if (isAdmin()) {
+        <button type="button" (click)="startCreate()">New book</button>
+      }
+      <button type="button" (click)="loadBooks()" [disabled]="loading()">Reload</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label>
+      Search by title
+      <input #titleFilterInput type="text" [value]="titleFilter()" />
+    </label>
+    <button type="button" (click)="applyTitleFilter(titleFilterInput.value)">Search</button>
+  </div>
+
+  @if (isAdmin()) {
+    <form [formGroup]="form" (ngSubmit)="saveBook()" class="book-form">
+      <h2>{{ editingBookId() ? 'Edit book' : 'Create book' }}</h2>
+      <label>ISBN <input type="text" formControlName="isbn" /></label>
+      <label>Title <input type="text" formControlName="title" /></label>
+      <label>Publisher <input type="text" formControlName="publisher" /></label>
+      <label>Publication year <input type="number" formControlName="publicationYear" /></label>
+      <label>Description <textarea rows="3" formControlName="description"></textarea></label>
+      <label>
+        Author
+        <select formControlName="authorId">
+          <option [ngValue]="null">Select author</option>
+          @for (author of authors(); track author.id) {
+            <option [ngValue]="author.id">{{ author.fullName }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Category
+        <select formControlName="categoryId">
+          <option [ngValue]="null">Select category</option>
+          @for (category of categories(); track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </label>
+
+      @if (formErrorMessage()) {
+        <p class="error">{{ formErrorMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : editingBookId() ? 'Update book' : 'Create book' }}
+      </button>
+    </form>
+  }
+
+  @if (loading()) {
+    <p>Loading books...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else if (books().length === 0) {
+    <p>No books found.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Year</th>
+          <th>ISBN</th>
+          @if (isAdmin()) {
+            <th>Actions</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (book of books(); track book.id) {
+          <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.authorName }}</td>
+            <td>{{ book.categoryName }}</td>
+            <td>{{ book.publicationYear }}</td>
+            <td>{{ book.isbn }}</td>
+            @if (isAdmin()) {
+              <td class="actions-cell">
+                <button type="button" (click)="startEdit(book)">Edit</button>
+                <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <footer class="pager">
+      <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">Previous</button>
+      <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }} ({{ totalElements() }} records)</span>
+      <button
+        type="button"
+        (click)="changePage(1)"
+        [disabled]="totalPages() === 0 || page() >= totalPages() - 1"
+      >
+        Next
+      </button>
+    </footer>
+  }
+</section>

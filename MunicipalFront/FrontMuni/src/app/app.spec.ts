@@ -1,10 +1,34 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+
 import { App } from './app';
+import { AuthService } from './core/auth/auth.service';
+import { NotificationService } from './shared/services/notification.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        provideRouter([]),
+        {
+          provide: AuthService,
+          useValue: {
+            session: () => null,
+            isAuthenticated: () => false,
+            isAuthenticatedSignal: () => false,
+            logout: () => of(void 0),
+          },
+        },
+        {
+          provide: NotificationService,
+          useValue: {
+            success: () => undefined,
+            error: () => undefined,
+          },
+        },
+      ],
     }).compileComponents();
   });
 
@@ -12,12 +36,5 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it('should render title', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, FrontMuni');
   });
 });

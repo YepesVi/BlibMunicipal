@@ -1,0 +1,103 @@
+<section class="users-page">
+  <header>
+    <h1>Users</h1>
+    <div class="actions">
+      @if (isAdmin()) {
+        <button type="button" (click)="startCreate()">New user</button>
+      }
+      <button type="button" (click)="loadUsers()" [disabled]="loading()">Reload</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label>
+      Search by username
+      <input #usernameFilterInput type="text" [value]="usernameFilter()" />
+    </label>
+    <button type="button" (click)="applyUsernameFilter(usernameFilterInput.value)">Search</button>
+  </div>
+
+  @if (isAdmin()) {
+    <form [formGroup]="form" (ngSubmit)="saveUser()" class="user-form">
+      <h2>{{ editingUserId() ? 'Edit user' : 'Create user' }}</h2>
+
+      <label>
+        Username
+        <input type="text" formControlName="username" />
+      </label>
+
+      <label>
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          [placeholder]="editingUserId() ? 'Leave empty to keep current password' : ''"
+        />
+      </label>
+
+      <label>
+        Role
+        <select formControlName="role">
+          <option value="ADMIN">ADMIN</option>
+          <option value="EMPLOYEE">EMPLOYEE</option>
+        </select>
+      </label>
+
+      @if (formErrorMessage()) {
+        <p class="error">{{ formErrorMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : editingUserId() ? 'Update user' : 'Create user' }}
+      </button>
+    </form>
+  }
+
+  @if (loading()) {
+    <p>Loading users...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else if (users().length === 0) {
+    <p>No users found.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Role</th>
+          @if (isAdmin()) {
+            <th>Actions</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            @if (isAdmin()) {
+              <td class="actions-cell">
+                <button type="button" (click)="startEdit(user)">Edit</button>
+                <button type="button" class="danger" (click)="deleteUser(user)">Delete</button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <footer class="pager">
+      <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">Previous</button>
+      <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }} ({{ totalElements() }} records)</span>
+      <button
+        type="button"
+        (click)="changePage(1)"
+        [disabled]="totalPages() === 0 || page() >= totalPages() - 1"
+      >
+        Next
+      </button>
+    </footer>
+  }
+</section>

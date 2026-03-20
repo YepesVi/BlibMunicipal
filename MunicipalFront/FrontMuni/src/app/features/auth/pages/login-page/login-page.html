@@ -1,0 +1,24 @@
+<section class="login-page">
+  <h1>Municipal Library</h1>
+  <p>Sign in to continue</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+    <label>
+      Username
+      <input type="text" formControlName="username" autocomplete="username" />
+    </label>
+
+    <label>
+      Password
+      <input type="password" formControlName="password" autocomplete="current-password" />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+    </button>
+  </form>
+</section>

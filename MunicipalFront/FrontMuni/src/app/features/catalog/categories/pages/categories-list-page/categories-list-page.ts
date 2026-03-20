@@ -1,0 +1,154 @@
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
+
+import { AuthService } from '../../../../../core/auth/auth.service';
+import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
+import { NotificationService } from '../../../../../shared/services/notification.service';
+import { CategoriesApiService } from '../../data-access/categories-api.service';
+import { CategoryResponse } from '../../data-access/categories.dto';
+
+@Component({
+  selector: 'app-categories-list-page',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './categories-list-page.html',
+  styleUrl: './categories-list-page.scss',
+})
+export class CategoriesListPage {
+  private readonly categoriesApiService = inject(CategoriesApiService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly notificationService = inject(NotificationService);
+
+  readonly loading = signal(false);
+  readonly saving = signal(false);
+  readonly errorMessage = signal<string | null>(null);
+  readonly categories = signal<CategoryResponse[]>([]);
+  readonly editingCategoryId = signal<number | null>(null);
+  readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
+
+  readonly form = this.formBuilder.nonNullable.group({
+    name: ['', [Validators.required, Validators.minLength(2)]],
+    description: [''],
+    parentId: [''],
+  });
+
+  constructor() {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    this.categoriesApiService
+      .findAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (categories) => {
+          this.categories.set(categories);
+          this.loading.set(false);
+        },
+        error: (error: unknown) => {
+          this.errorMessage.set(error instanceof Error ? error.message : 'Failed to load categories');
+          if (error instanceof Error) {
+            this.notificationService.error(error.message);
+          }
+          this.loading.set(false);
+        },
+      });
+  }
+
+  startCreate(): void {
+    this.editingCategoryId.set(null);
+    this.form.reset({ name: '', description: '', parentId: '' });
+  }
+
+  startEdit(category: CategoryResponse): void {
+    this.editingCategoryId.set(category.id);
+    this.form.reset({
+      name: category.name,
+      description: category.description ?? '',
+      parentId: category.parentId ? String(category.parentId) : '',
+    });
+  }
+
+  saveCategory(): void {
+    if (this.form.invalid || this.saving()) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const editingId = this.editingCategoryId();
+    const value = this.form.getRawValue();
+    const payload = {
+      name: value.name,
+      description: value.description || undefined,
+      parentId: value.parentId ? Number(value.parentId) : null,
+    };
+
+    this.saving.set(true);
+    const request$ = editingId
+      ? this.categoriesApiService.update(editingId, payload)
+      : this.categoriesApiService.create(payload);
+
+    request$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.saving.set(false))
+      )
+      .subscribe({
+        next: () => {
+          this.startCreate();
+          this.loadCategories();
+          this.notificationService.success(
+            editingId ? 'Category updated successfully' : 'Category created successfully'
+          );
+        },
+        error: (error: unknown) => {
+          const message = error instanceof Error ? error.message : 'Failed to save category';
+          this.errorMessage.set(message);
+          this.notificationService.error(message);
+        },
+      });
+  }
+
+  deleteCategory(category: CategoryResponse): void {
+    if (!this.isAdmin()) {
+      return;
+    }
+
+    this.confirmDialogService
+      .open({
+        title: 'Delete category',
+        message: `Are you sure you want to delete "${category.name}"?`,
+        confirmLabel: 'Delete',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.categoriesApiService
+          .delete(category.id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => {
+              this.notificationService.success('Category deleted successfully');
+              this.loadCategories();
+            },
+            error: (error: unknown) => {
+              const message = error instanceof Error ? error.message : 'Failed to delete category';
+              this.errorMessage.set(message);
+              this.notificationService.error(message);
+            },
+          });
+      });
+  }
+}

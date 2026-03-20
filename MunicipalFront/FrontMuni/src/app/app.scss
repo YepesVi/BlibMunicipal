@@ -1,0 +1,36 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  nav {
+    display: flex;
+    gap: 1rem;
+  }
+
+  a {
+    color: #1f2937;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  a.active {
+    color: #0b63af;
+  }
+
+  button {
+    border: 1px solid #bdbdbd;
+    border-radius: 8px;
+    padding: 0.35rem 0.8rem;
+    background: #ffffff;
+    cursor: pointer;
+  }
+}
+
+.app-main {
+  min-height: calc(100vh - 57px);
+  background: #f6f7f9;
+}

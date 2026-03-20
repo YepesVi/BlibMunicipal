@@ -1,0 +1,56 @@
+<section class="authors-page">
+  <header>
+    <h1>Authors</h1>
+    <div class="actions">
+      @if (isAdmin()) {
+        <button type="button" (click)="startCreate()">New author</button>
+      }
+      <button type="button" (click)="loadAuthors()" [disabled]="loading()">Reload</button>
+    </div>
+  </header>
+
+  @if (isAdmin()) {
+    <form [formGroup]="form" (ngSubmit)="saveAuthor()" class="author-form">
+      <h2>{{ editingAuthorId() ? 'Edit author' : 'Create author' }}</h2>
+      <label>Id card <input type="text" formControlName="idCard" /></label>
+      <label>Full name <input type="text" formControlName="fullName" /></label>
+      <label>Nationality <input type="text" formControlName="nationality" /></label>
+      <label>Biography <textarea rows="3" formControlName="biography"></textarea></label>
+      <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save author' }}</button>
+    </form>
+  }
+
+  @if (loading()) {
+    <p>Loading authors...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Id card</th>
+          <th>Nationality</th>
+          @if (isAdmin()) {
+            <th>Actions</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (author of authors(); track author.id) {
+          <tr>
+            <td>{{ author.fullName }}</td>
+            <td>{{ author.idCard }}</td>
+            <td>{{ author.nationality }}</td>
+            @if (isAdmin()) {
+              <td class="actions-cell">
+                <button type="button" (click)="startEdit(author)">Edit</button>
+                <button type="button" class="danger" (click)="deleteAuthor(author)">Delete</button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>
