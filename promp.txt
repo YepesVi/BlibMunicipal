@@ -1,5 +1,0 @@
-i want the next things:
-1. change the ux to look more modern, by using modals to forms that appears just when its needed, kanban style listing, a dark mode, categories listed and showed as a tree 
-2. other thing is that the backend has support for images and the frontend should be using this feature 
-3. the fitering and sorting offered by the backend is not being used 
-4. EMPLOYEE role should be able to extract reports abaout books asociated to its author(EMPLOYEE gets the report by the author idCard )
