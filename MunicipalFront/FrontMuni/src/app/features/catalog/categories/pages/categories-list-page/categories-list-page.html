@@ -3,33 +3,36 @@
     <h1>Categories</h1>
     <div class="actions">
       @if (isAdmin()) {
-        <button type="button" (click)="startCreate()">New category</button>
+        <button type="button" (click)="openCreateModal()">New category</button>
       }
       <button type="button" (click)="loadCategories()" [disabled]="loading()">Reload</button>
     </div>
   </header>
 
-  @if (isAdmin()) {
-    <form [formGroup]="form" (ngSubmit)="saveCategory()" class="category-form">
-      <h2>{{ editingCategoryId() ? 'Edit category' : 'Create category' }}</h2>
-      <label>Name <input type="text" formControlName="name" /></label>
-      <label>Description <textarea rows="2" formControlName="description"></textarea></label>
-      <label>
-        Parent category
-        <select formControlName="parentId">
-          <option value="">No parent</option>
-          @for (category of categories(); track category.id) {
-            @if (category.id !== editingCategoryId()) {
-              <option [value]="category.id">{{ category.name }}</option>
+  <section class="tree-panel">
+    <h2>Tree View</h2>
+    <ul class="category-tree">
+      @for (node of categoryTree(); track node.id) {
+        <li>
+          <div class="tree-item">
+            @if (node.children.length > 0) {
+              <button type="button" class="toggle" (click)="toggleExpand(node.id)">
+                {{ isExpanded(node.id) ? '-' : '+' }}
+              </button>
             }
+            <span>{{ node.name }}</span>
+          </div>
+          @if (node.children.length > 0 && isExpanded(node.id)) {
+            <ul>
+              @for (child of node.children; track child.id) {
+                <li><span class="nested">{{ child.name }}</span></li>
+              }
+            </ul>
           }
-        </select>
-      </label>
-      <button type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving...' : 'Save category' }}
-      </button>
-    </form>
-  }
+        </li>
+      }
+    </ul>
+  </section>
 
   @if (loading()) {
     <p>Loading categories...</p>
@@ -55,7 +58,7 @@
             <td>{{ category.description || '-' }}</td>
             @if (isAdmin()) {
               <td class="actions-cell">
-                <button type="button" (click)="startEdit(category)">Edit</button>
+                <button type="button" (click)="openEditModal(category)">Edit</button>
                 <button type="button" class="danger" (click)="deleteCategory(category)">
                   Delete
                 </button>
@@ -65,5 +68,33 @@
         }
       </tbody>
     </table>
+  }
+
+  @if (showFormModal() && isAdmin()) {
+    <div class="modal-backdrop" (click)="closeFormModal()"></div>
+    <section class="modal" role="dialog" aria-modal="true">
+      <form [formGroup]="form" (ngSubmit)="saveCategory()" class="category-form">
+        <h2>{{ editingCategoryId() ? 'Edit category' : 'Create category' }}</h2>
+        <label>Name <input type="text" formControlName="name" /></label>
+        <label>Description <textarea rows="2" formControlName="description"></textarea></label>
+        <label>
+          Parent category
+          <select formControlName="parentId">
+            <option value="">No parent</option>
+            @for (category of categories(); track category.id) {
+              @if (category.id !== editingCategoryId()) {
+                <option [value]="category.id">{{ category.name }}</option>
+              }
+            }
+          </select>
+        </label>
+        <div class="form-actions">
+          <button type="button" class="secondary" (click)="closeFormModal()">Cancel</button>
+          <button type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save category' }}
+          </button>
+        </div>
+      </form>
+    </section>
   }
 </section>

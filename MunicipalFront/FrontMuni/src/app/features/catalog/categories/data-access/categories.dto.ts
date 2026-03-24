@@ -8,6 +8,15 @@ export interface CategoryResponse {
   updatedAt: string;
 }
 
+export interface CategoryTreeResponse {
+  id: number;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  children: CategoryTreeResponse[];
+}
+
 export interface CreateCategoryRequest {
   name: string;
   description?: string;

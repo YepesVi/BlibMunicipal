@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
@@ -9,6 +9,12 @@ import { ConfirmDialogService } from '../../../../../shared/services/confirm-dia
 import { NotificationService } from '../../../../../shared/services/notification.service';
 import { CategoriesApiService } from '../../data-access/categories-api.service';
 import { CategoryResponse } from '../../data-access/categories.dto';
+
+interface CategoryTreeNode {
+  id: number;
+  name: string;
+  children: CategoryTreeNode[];
+}
 
 @Component({
   selector: 'app-categories-list-page',
@@ -30,7 +36,10 @@ export class CategoriesListPage {
   readonly errorMessage = signal<string | null>(null);
   readonly categories = signal<CategoryResponse[]>([]);
   readonly editingCategoryId = signal<number | null>(null);
+  readonly showFormModal = signal(false);
+  readonly expandedIds = signal<Set<number>>(new Set());
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
+  readonly categoryTree = computed(() => this.buildTree(this.categories()));
 
   readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -69,6 +78,11 @@ export class CategoriesListPage {
     this.form.reset({ name: '', description: '', parentId: '' });
   }
 
+  openCreateModal(): void {
+    this.startCreate();
+    this.showFormModal.set(true);
+  }
+
   startEdit(category: CategoryResponse): void {
     this.editingCategoryId.set(category.id);
     this.form.reset({
@@ -76,6 +90,15 @@ export class CategoriesListPage {
       description: category.description ?? '',
       parentId: category.parentId ? String(category.parentId) : '',
     });
+  }
+
+  openEditModal(category: CategoryResponse): void {
+    this.startEdit(category);
+    this.showFormModal.set(true);
+  }
+
+  closeFormModal(): void {
+    this.showFormModal.set(false);
   }
 
   saveCategory(): void {
@@ -105,6 +128,7 @@ export class CategoriesListPage {
       .subscribe({
         next: () => {
           this.startCreate();
+          this.closeFormModal();
           this.loadCategories();
           this.notificationService.success(
             editingId ? 'Category updated successfully' : 'Category created successfully'
@@ -150,5 +174,39 @@ export class CategoriesListPage {
             },
           });
       });
+  }
+
+  toggleExpand(id: number): void {
+    const expanded = new Set(this.expandedIds());
+    if (expanded.has(id)) {
+      expanded.delete(id);
+    } else {
+      expanded.add(id);
+    }
+    this.expandedIds.set(expanded);
+  }
+
+  isExpanded(id: number): boolean {
+    return this.expandedIds().has(id);
+  }
+
+  private buildTree(categories: CategoryResponse[]): CategoryTreeNode[] {
+    const byParent = new Map<number | null, CategoryResponse[]>();
+
+    for (const category of categories) {
+      const list = byParent.get(category.parentId) ?? [];
+      list.push(category);
+      byParent.set(category.parentId, list);
+    }
+
+    const buildNode = (category: CategoryResponse): CategoryTreeNode => ({
+      id: category.id,
+      name: category.name,
+      children: (byParent.get(category.id) ?? [])
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(buildNode),
+    });
+
+    return (byParent.get(null) ?? []).sort((a, b) => a.name.localeCompare(b.name)).map(buildNode);
   }
 }

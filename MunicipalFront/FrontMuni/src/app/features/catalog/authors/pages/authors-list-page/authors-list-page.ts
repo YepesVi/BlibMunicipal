@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../../../../../core/auth/auth.service';
@@ -13,7 +13,7 @@ import { AuthorsApiService } from '../../data-access/authors-api.service';
 @Component({
   selector: 'app-authors-list-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './authors-list-page.html',
   styleUrl: './authors-list-page.scss',
 })
@@ -28,7 +28,9 @@ export class AuthorsListPage {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly fullNameFilter = signal('');
   readonly authors = signal<AuthorResponse[]>([]);
+  readonly showFormModal = signal(false);
   readonly editingAuthorId = signal<number | null>(null);
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
 
@@ -48,7 +50,7 @@ export class AuthorsListPage {
     this.errorMessage.set(null);
 
     this.authorsApiService
-      .findAll()
+      .findAll(this.fullNameFilter() || undefined)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (authors) => {
@@ -65,9 +67,18 @@ export class AuthorsListPage {
       });
   }
 
+  applyFilters(): void {
+    this.loadAuthors();
+  }
+
   startCreate(): void {
     this.editingAuthorId.set(null);
     this.form.reset({ idCard: '', fullName: '', nationality: '', biography: '' });
+  }
+
+  openCreateModal(): void {
+    this.startCreate();
+    this.showFormModal.set(true);
   }
 
   startEdit(author: AuthorResponse): void {
@@ -78,6 +89,15 @@ export class AuthorsListPage {
       nationality: author.nationality,
       biography: author.biography ?? '',
     });
+  }
+
+  openEditModal(author: AuthorResponse): void {
+    this.startEdit(author);
+    this.showFormModal.set(true);
+  }
+
+  closeFormModal(): void {
+    this.showFormModal.set(false);
   }
 
   saveAuthor(): void {
@@ -103,6 +123,7 @@ export class AuthorsListPage {
       .subscribe({
         next: () => {
           this.startCreate();
+          this.closeFormModal();
           this.loadAuthors();
           this.notificationService.success(
             editingId ? 'Author updated successfully' : 'Author created successfully'

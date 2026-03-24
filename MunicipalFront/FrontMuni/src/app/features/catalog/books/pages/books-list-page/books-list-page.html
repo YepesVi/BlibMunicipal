@@ -2,107 +2,252 @@
   <header>
     <h1>Books</h1>
     <div class="actions">
+      <div class="view-mode">
+        <button type="button" [class.active]="viewMode() === 'list'" (click)="setViewMode('list')">
+          List
+        </button>
+        <button
+          type="button"
+          [class.active]="viewMode() === 'kanban'"
+          (click)="setViewMode('kanban')"
+        >
+          Kanban
+        </button>
+      </div>
       @if (isAdmin()) {
-        <button type="button" (click)="startCreate()">New book</button>
+        <button type="button" (click)="openCreateModal()">New book</button>
       }
       <button type="button" (click)="loadBooks()" [disabled]="loading()">Reload</button>
     </div>
   </header>
 
-  <div class="filters">
-    <label>
-      Search by title
-      <input #titleFilterInput type="text" [value]="titleFilter()" />
-    </label>
-    <button type="button" (click)="applyTitleFilter(titleFilterInput.value)">Search</button>
-  </div>
+  <div class="layout-grid">
+    <aside class="sidebar">
+      <h3>Category Tree</h3>
+      <button type="button" class="link" (click)="clearFilters()">Clear all filters</button>
 
-  @if (isAdmin()) {
-    <form [formGroup]="form" (ngSubmit)="saveBook()" class="book-form">
-      <h2>{{ editingBookId() ? 'Edit book' : 'Create book' }}</h2>
-      <label>ISBN <input type="text" formControlName="isbn" /></label>
-      <label>Title <input type="text" formControlName="title" /></label>
-      <label>Publisher <input type="text" formControlName="publisher" /></label>
-      <label>Publication year <input type="number" formControlName="publicationYear" /></label>
-      <label>Description <textarea rows="3" formControlName="description"></textarea></label>
-      <label>
-        Author
-        <select formControlName="authorId">
-          <option [ngValue]="null">Select author</option>
-          @for (author of authors(); track author.id) {
-            <option [ngValue]="author.id">{{ author.fullName }}</option>
-          }
-        </select>
-      </label>
-      <label>
-        Category
-        <select formControlName="categoryId">
-          <option [ngValue]="null">Select category</option>
-          @for (category of categories(); track category.id) {
-            <option [ngValue]="category.id">{{ category.name }}</option>
-          }
-        </select>
-      </label>
+      <ul class="category-tree">
+        @for (node of categoryTree(); track node.id) {
+          <li>
+            <div class="tree-item">
+              @if (node.children.length > 0) {
+                <button type="button" class="toggle" (click)="toggleCategoryTreeNode(node.id)">
+                  {{ isCategoryExpanded(node.id) ? '-' : '+' }}
+                </button>
+              }
+              <button type="button" class="node" (click)="filterByCategoryFromTree(node.id)">
+                {{ node.name }}
+              </button>
+            </div>
 
-      @if (formErrorMessage()) {
-        <p class="error">{{ formErrorMessage() }}</p>
+            @if (node.children.length > 0 && isCategoryExpanded(node.id)) {
+              <ul>
+                @for (child of node.children; track child.id) {
+                  <li>
+                    <div class="tree-item nested">
+                      <button type="button" class="node" (click)="filterByCategoryFromTree(child.id)">
+                        {{ child.name }}
+                      </button>
+                    </div>
+                  </li>
+                }
+              </ul>
+            }
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <div class="content">
+      <div class="filters">
+        <label>
+          Title
+          <input type="text" [ngModel]="titleFilter()" (ngModelChange)="titleFilter.set($event)" />
+        </label>
+        <label>
+          Author
+          <select [ngModel]="authorFilter()" (ngModelChange)="authorFilter.set($event)">
+            <option [ngValue]="null">All authors</option>
+            @for (author of authors(); track author.id) {
+              <option [ngValue]="author.id">{{ author.fullName }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Category
+          <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
+            <option [ngValue]="null">All categories</option>
+            @for (category of categories(); track category.id) {
+              <option [ngValue]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Year
+          <input
+            type="number"
+            [ngModel]="publicationYearFilter()"
+            (ngModelChange)="publicationYearFilter.set($event ? +$event : null)"
+          />
+        </label>
+        <label>
+          Sort by
+          <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+            <option value="title">Title</option>
+            <option value="publicationYear">Year</option>
+            <option value="createdAt">Created at</option>
+          </select>
+        </label>
+        <label>
+          Direction
+          <select [ngModel]="sortDir()" (ngModelChange)="sortDir.set($event)">
+            <option value="asc">Asc</option>
+            <option value="desc">Desc</option>
+          </select>
+        </label>
+
+        <div class="filter-actions">
+          <button type="button" (click)="applyFilters()">Apply</button>
+          <button type="button" class="secondary" (click)="clearFilters()">Reset</button>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <p>Loading books...</p>
+      } @else if (errorMessage()) {
+        <p class="error">{{ errorMessage() }}</p>
+      } @else if (books().length === 0) {
+        <p>No books found.</p>
+      } @else if (viewMode() === 'list') {
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Category</th>
+              <th>Year</th>
+              <th>ISBN</th>
+              @if (isAdmin()) {
+                <th>Actions</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (book of books(); track book.id) {
+              <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.authorName }}</td>
+                <td>{{ book.categoryName }}</td>
+                <td>{{ book.publicationYear }}</td>
+                <td>{{ book.isbn }}</td>
+                @if (isAdmin()) {
+                  <td class="actions-cell">
+                    <button type="button" (click)="openEditModal(book)">Edit</button>
+                    <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <div class="kanban-board">
+          @for (column of kanbanColumns(); track column.categoryId) {
+            <article class="kanban-column">
+              <h3>{{ column.categoryName }} ({{ column.books.length }})</h3>
+              <div class="kanban-cards">
+                @for (book of column.books; track book.id) {
+                  <div class="book-card">
+                    @if (book.primaryImageUrl) {
+                      <img [src]="book.primaryImageUrl" [alt]="book.title" />
+                    }
+                    <h4>{{ book.title }}</h4>
+                    <p>{{ book.authorName }}</p>
+                    <small>{{ book.isbn }} • {{ book.publicationYear }}</small>
+                    @if (isAdmin()) {
+                      <div class="card-actions">
+                        <button type="button" (click)="openEditModal(book)">Edit</button>
+                        <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        </div>
       }
 
-      <button type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving...' : editingBookId() ? 'Update book' : 'Create book' }}
-      </button>
-    </form>
-  }
+      <footer class="pager">
+        <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">Previous</button>
+        <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }} ({{ totalElements() }} records)</span>
+        <button
+          type="button"
+          (click)="changePage(1)"
+          [disabled]="totalPages() === 0 || page() >= totalPages() - 1"
+        >
+          Next
+        </button>
+      </footer>
+    </div>
+  </div>
 
-  @if (loading()) {
-    <p>Loading books...</p>
-  } @else if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  } @else if (books().length === 0) {
-    <p>No books found.</p>
-  } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Category</th>
-          <th>Year</th>
-          <th>ISBN</th>
-          @if (isAdmin()) {
-            <th>Actions</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (book of books(); track book.id) {
-          <tr>
-            <td>{{ book.title }}</td>
-            <td>{{ book.authorName }}</td>
-            <td>{{ book.categoryName }}</td>
-            <td>{{ book.publicationYear }}</td>
-            <td>{{ book.isbn }}</td>
-            @if (isAdmin()) {
-              <td class="actions-cell">
-                <button type="button" (click)="startEdit(book)">Edit</button>
-                <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
-              </td>
+  @if (showFormModal()) {
+    <div class="modal-backdrop" (click)="closeFormModal()"></div>
+    <section class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <form [formGroup]="form" (ngSubmit)="saveBook()" class="book-form">
+        <h2>{{ editingBookId() ? 'Edit book' : 'Create book' }}</h2>
+        <label>ISBN <input type="text" formControlName="isbn" /></label>
+        <label>Title <input type="text" formControlName="title" /></label>
+        <label>Publisher <input type="text" formControlName="publisher" /></label>
+        <label>Publication year <input type="number" formControlName="publicationYear" /></label>
+        <label>Description <textarea rows="3" formControlName="description"></textarea></label>
+        <label>
+          Author
+          <select formControlName="authorId">
+            <option [ngValue]="null">Select author</option>
+            @for (author of authors(); track author.id) {
+              <option [ngValue]="author.id">{{ author.fullName }}</option>
             }
-          </tr>
-        }
-      </tbody>
-    </table>
+          </select>
+        </label>
+        <label>
+          Category
+          <select formControlName="categoryId">
+            <option [ngValue]="null">Select category</option>
+            @for (category of categories(); track category.id) {
+              <option [ngValue]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </label>
 
-    <footer class="pager">
-      <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">Previous</button>
-      <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }} ({{ totalElements() }} records)</span>
-      <button
-        type="button"
-        (click)="changePage(1)"
-        [disabled]="totalPages() === 0 || page() >= totalPages() - 1"
-      >
-        Next
-      </button>
-    </footer>
+        <label>
+          Cover image (optional)
+          <input type="file" accept="image/*" (change)="onBookImageSelected($event)" />
+        </label>
+        @if (pendingImageName()) {
+          <p class="muted">Selected: {{ pendingImageName() }}</p>
+          <label
+            >Image alt text
+            <input
+              type="text"
+              [value]="pendingImageAltText()"
+              (input)="pendingImageAltText.set($any($event.target).value)"
+            />
+          </label>
+        }
+
+        @if (formErrorMessage()) {
+          <p class="error">{{ formErrorMessage() }}</p>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="secondary" (click)="closeFormModal()">Cancel</button>
+          <button type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : editingBookId() ? 'Update book' : 'Create book' }}
+          </button>
+        </div>
+      </form>
+    </section>
   }
 </section>

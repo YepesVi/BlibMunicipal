@@ -3,22 +3,19 @@
     <h1>Authors</h1>
     <div class="actions">
       @if (isAdmin()) {
-        <button type="button" (click)="startCreate()">New author</button>
+        <button type="button" (click)="openCreateModal()">New author</button>
       }
       <button type="button" (click)="loadAuthors()" [disabled]="loading()">Reload</button>
     </div>
   </header>
 
-  @if (isAdmin()) {
-    <form [formGroup]="form" (ngSubmit)="saveAuthor()" class="author-form">
-      <h2>{{ editingAuthorId() ? 'Edit author' : 'Create author' }}</h2>
-      <label>Id card <input type="text" formControlName="idCard" /></label>
-      <label>Full name <input type="text" formControlName="fullName" /></label>
-      <label>Nationality <input type="text" formControlName="nationality" /></label>
-      <label>Biography <textarea rows="3" formControlName="biography"></textarea></label>
-      <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save author' }}</button>
-    </form>
-  }
+  <div class="filters">
+    <label>
+      Search by name
+      <input [ngModel]="fullNameFilter()" (ngModelChange)="fullNameFilter.set($event)" />
+    </label>
+    <button type="button" (click)="applyFilters()">Apply</button>
+  </div>
 
   @if (loading()) {
     <p>Loading authors...</p>
@@ -44,7 +41,7 @@
             <td>{{ author.nationality }}</td>
             @if (isAdmin()) {
               <td class="actions-cell">
-                <button type="button" (click)="startEdit(author)">Edit</button>
+                <button type="button" (click)="openEditModal(author)">Edit</button>
                 <button type="button" class="danger" (click)="deleteAuthor(author)">Delete</button>
               </td>
             }
@@ -52,5 +49,22 @@
         }
       </tbody>
     </table>
+  }
+
+  @if (showFormModal() && isAdmin()) {
+    <div class="modal-backdrop" (click)="closeFormModal()"></div>
+    <section class="modal" role="dialog" aria-modal="true">
+      <form [formGroup]="form" (ngSubmit)="saveAuthor()" class="author-form">
+        <h2>{{ editingAuthorId() ? 'Edit author' : 'Create author' }}</h2>
+        <label>Id card <input type="text" formControlName="idCard" /></label>
+        <label>Full name <input type="text" formControlName="fullName" /></label>
+        <label>Nationality <input type="text" formControlName="nationality" /></label>
+        <label>Biography <textarea rows="3" formControlName="biography"></textarea></label>
+        <div class="form-actions">
+          <button type="button" class="secondary" (click)="closeFormModal()">Cancel</button>
+          <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save author' }}</button>
+        </div>
+      </form>
+    </section>
   }
 </section>

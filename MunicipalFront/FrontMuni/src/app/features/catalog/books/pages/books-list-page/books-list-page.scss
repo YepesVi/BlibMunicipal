@@ -1,5 +1,6 @@
 .books-page {
-  margin: 2rem;
+  margin: 1.5rem;
+  color: var(--app-text);
 
   header {
     display: flex;
@@ -10,85 +11,202 @@
 
   .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .view-mode {
+    display: flex;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .view-mode button {
+    border: 0;
+    border-right: 1px solid var(--app-border);
+    border-radius: 0;
+  }
+
+  .view-mode button:last-child {
+    border-right: 0;
+  }
+
+  .view-mode button.active {
+    background: var(--app-primary);
+    color: #fff;
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1rem;
+  }
+
+  .sidebar,
+  .content {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    padding: 0.9rem;
+  }
+
+  .sidebar h3 {
+    margin: 0;
+  }
+
+  .link {
+    margin-top: 0.5rem;
+    border: 0;
+    background: transparent;
+    color: var(--app-primary);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .category-tree,
+  .category-tree ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0.4rem;
+  }
+
+  .tree-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+
+  .toggle,
+  .node {
+    border: 1px solid var(--app-border);
+    background: var(--app-surface);
+    color: var(--app-text);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .nested {
+    margin-left: 1.2rem;
   }
 
   .filters {
-    display: flex;
-    gap: 0.5rem;
-    align-items: end;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(120px, 1fr));
+    gap: 0.6rem;
     margin-bottom: 1rem;
 
     label {
       display: grid;
       gap: 0.25rem;
       font-weight: 600;
+      font-size: 0.9rem;
     }
   }
 
-  .book-form {
-    display: grid;
-    gap: 0.7rem;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-
-    h2 {
-      margin: 0;
-      font-size: 1rem;
-    }
-
-    label {
-      display: grid;
-      gap: 0.3rem;
-      font-weight: 600;
-    }
+  .filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: end;
   }
 
-  button {
-    border: 1px solid #bdbdbd;
-    border-radius: 8px;
-    background: #fff;
-    padding: 0.45rem 0.8rem;
-    cursor: pointer;
-  }
-
+  button,
   input,
   select,
   textarea {
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--app-border);
     border-radius: 8px;
-    padding: 0.45rem 0.6rem;
+    background: var(--app-surface);
+    color: var(--app-text);
+    padding: 0.45rem 0.65rem;
     font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button.secondary {
+    background: transparent;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
+    background: var(--app-surface);
   }
 
   th,
   td {
     padding: 0.75rem;
-    border-bottom: 1px solid #e9e9e9;
+    border-bottom: 1px solid var(--app-border);
     text-align: left;
   }
 
   th {
-    background: #f7f7f7;
+    background: color-mix(in srgb, var(--app-surface) 80%, #000 5%);
   }
 
-  .actions-cell {
+  .actions-cell,
+  .card-actions {
     display: flex;
     gap: 0.4rem;
   }
 
   .danger {
     border-color: #ef4444;
-    color: #b91c1c;
+    color: #ef4444;
+  }
+
+  .kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .kanban-column {
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--app-surface) 85%, #000 3%);
+    padding: 0.65rem;
+  }
+
+  .kanban-column h3 {
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .kanban-cards {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .book-card {
+    border: 1px solid var(--app-border);
+    border-radius: 9px;
+    background: var(--app-surface);
+    padding: 0.6rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .book-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .book-card h4 {
+    margin: 0;
+  }
+
+  .book-card p,
+  .book-card small {
+    margin: 0;
+    color: var(--app-muted);
   }
 
   .pager {
@@ -98,8 +216,67 @@
     justify-content: space-between;
     gap: 1rem;
   }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 45%);
+    z-index: 20;
+  }
+
+  .modal {
+    position: fixed;
+    z-index: 21;
+    width: min(680px, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  .book-form {
+    display: grid;
+    gap: 0.7rem;
+
+    h2 {
+      margin: 0;
+    }
+
+    label {
+      display: grid;
+      gap: 0.3rem;
+      font-weight: 600;
+    }
+  }
+
+  .muted {
+    margin: 0;
+    color: var(--app-muted);
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
 }
 
 .error {
-  color: #b91c1c;
+  color: #ef4444;
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .books-page .layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .books-page .filters {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
 }

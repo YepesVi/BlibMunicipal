@@ -7,6 +7,7 @@ import { getApiUrl } from '../../../../core/api/api.config';
 import { PageResponse } from '../../../../models/common/page-response.model';
 import {
   BookResponse,
+  AttachBookImagesRequest,
   BooksQueryParams,
   BookSummaryResponse,
   CreateBookRequest,
@@ -41,5 +42,12 @@ export class BooksApiService {
 
   delete(bookId: number): Observable<void> {
     return this.http.delete<void>(getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}`));
+  }
+
+  attachImages(bookId: number, payload: AttachBookImagesRequest): Observable<BookResponse> {
+    return this.http.post<BookResponse>(
+      getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}/images`),
+      payload
+    );
   }
 }

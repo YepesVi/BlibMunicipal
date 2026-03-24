@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
@@ -14,7 +14,7 @@ import { UsersApiService } from '../../data-access/users-api.service';
 @Component({
   selector: 'app-users-list-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './users-list-page.html',
   styleUrl: './users-list-page.scss',
 })
@@ -37,6 +37,9 @@ export class UsersListPage {
   readonly totalPages = signal(0);
   readonly totalElements = signal(0);
   readonly usernameFilter = signal('');
+  readonly sortBy = signal<'id' | 'username' | 'role'>('id');
+  readonly sortDir = signal<'asc' | 'desc'>('asc');
+  readonly showFormModal = signal(false);
   readonly editingUserId = signal<number | null>(null);
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
 
@@ -64,8 +67,8 @@ export class UsersListPage {
       .findAll({
         page: this.page(),
         size: 20,
-        sortBy: 'id',
-        sortDir: 'asc',
+        sortBy: this.sortBy(),
+        sortDir: this.sortDir(),
         username: this.usernameFilter() || undefined,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -148,6 +151,7 @@ export class UsersListPage {
       .subscribe({
         next: () => {
           this.startCreate();
+          this.closeFormModal();
           this.loadUsers();
           this.notificationService.success(
             editingId ? 'User updated successfully' : 'User created successfully'
@@ -202,9 +206,17 @@ export class UsersListPage {
     const queryParams = this.route.snapshot.queryParamMap;
     const page = Number(queryParams.get('usersPage') ?? '0');
     const username = queryParams.get('usersUsername') ?? '';
+    const sortBy = queryParams.get('usersSortBy');
+    const sortDir = queryParams.get('usersSortDir');
 
     this.page.set(Number.isNaN(page) ? 0 : Math.max(0, page));
     this.usernameFilter.set(username);
+    if (sortBy === 'id' || sortBy === 'username' || sortBy === 'role') {
+      this.sortBy.set(sortBy);
+    }
+    if (sortDir === 'asc' || sortDir === 'desc') {
+      this.sortDir.set(sortDir);
+    }
   }
 
   private syncQueryParams(): void {
@@ -213,9 +225,30 @@ export class UsersListPage {
       queryParams: {
         usersPage: this.page(),
         usersUsername: this.usernameFilter() || null,
+        usersSortBy: this.sortBy(),
+        usersSortDir: this.sortDir(),
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
+  }
+
+  applyFilters(): void {
+    this.page.set(0);
+    this.loadUsers();
+  }
+
+  openCreateModal(): void {
+    this.startCreate();
+    this.showFormModal.set(true);
+  }
+
+  openEditModal(user: UserResponse): void {
+    this.startEdit(user);
+    this.showFormModal.set(true);
+  }
+
+  closeFormModal(): void {
+    this.showFormModal.set(false);
   }
 }

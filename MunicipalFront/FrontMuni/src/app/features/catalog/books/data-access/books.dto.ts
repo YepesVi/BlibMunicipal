@@ -41,6 +41,16 @@ export interface CreateBookRequest {
 
 export interface UpdateBookRequest extends CreateBookRequest {}
 
+export interface AttachBookImageItemRequest {
+  mediaAssetId: number;
+  primaryImage?: boolean;
+  altText?: string;
+}
+
+export interface AttachBookImagesRequest {
+  images: AttachBookImageItemRequest[];
+}
+
 export interface BooksQueryParams {
   title?: string;
   authorId?: number;

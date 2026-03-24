@@ -11,4 +11,7 @@ export const API_ENDPOINTS = {
   },
   users: '/api/users',
   media: '/api/media',
+  reports: {
+    booksByAuthorIdCard: '/api/reports/books/by-author-id-card',
+  },
 } as const;

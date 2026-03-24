@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { finalize, map, switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
 import { NotificationService } from '../../../../../shared/services/notification.service';
+import { MediaApiService } from '../../../../media/data-access/media-api.service';
 import { AuthorsApiService } from '../../../authors/data-access/authors-api.service';
 import { AuthorResponse } from '../../../authors/data-access/authors.dto';
 import { CategoriesApiService } from '../../../categories/data-access/categories-api.service';
@@ -15,10 +17,20 @@ import { CategoryResponse } from '../../../categories/data-access/categories.dto
 import { BooksApiService } from '../../data-access/books-api.service';
 import { BookSummaryResponse, CreateBookRequest } from '../../data-access/books.dto';
 
+type BooksViewMode = 'list' | 'kanban';
+type SortByOption = 'title' | 'publicationYear' | 'createdAt';
+type SortDirectionOption = 'asc' | 'desc';
+
+interface CategoryTreeNode {
+  id: number;
+  name: string;
+  children: CategoryTreeNode[];
+}
+
 @Component({
   selector: 'app-books-list-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './books-list-page.html',
   styleUrl: './books-list-page.scss',
 })
@@ -26,6 +38,7 @@ export class BooksListPage {
   private readonly booksApiService = inject(BooksApiService);
   private readonly authorsApiService = inject(AuthorsApiService);
   private readonly categoriesApiService = inject(CategoriesApiService);
+  private readonly mediaApiService = inject(MediaApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
@@ -44,9 +57,46 @@ export class BooksListPage {
   readonly page = signal(0);
   readonly totalPages = signal(0);
   readonly totalElements = signal(0);
+
   readonly titleFilter = signal('');
+  readonly authorFilter = signal<number | null>(null);
+  readonly categoryFilter = signal<number | null>(null);
+  readonly publicationYearFilter = signal<number | null>(null);
+  readonly sortBy = signal<SortByOption>('title');
+  readonly sortDir = signal<SortDirectionOption>('asc');
+
+  readonly viewMode = signal<BooksViewMode>('list');
+  readonly categoryTreeExpanded = signal<Set<number>>(new Set());
+  readonly showFormModal = signal(false);
   readonly editingBookId = signal<number | null>(null);
+  readonly pendingImageFile = signal<File | null>(null);
+  readonly pendingImageAltText = signal('');
+  readonly pendingImageName = signal<string | null>(null);
+
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
+
+  readonly categoryTree = computed(() => this.buildCategoryTree(this.categories()));
+  readonly kanbanColumns = computed(() => {
+    const books = this.books();
+    const grouped = new Map<number, BookSummaryResponse[]>();
+
+    for (const category of this.categories()) {
+      grouped.set(category.id, []);
+    }
+
+    for (const book of books) {
+      const column = grouped.get(book.categoryId);
+      if (column) {
+        column.push(book);
+      }
+    }
+
+    return this.categories().map((category) => ({
+      categoryId: category.id,
+      categoryName: category.name,
+      books: grouped.get(category.id) ?? [],
+    }));
+  });
 
   readonly form = this.formBuilder.nonNullable.group({
     isbn: ['', [Validators.required, Validators.minLength(5)]],
@@ -80,10 +130,13 @@ export class BooksListPage {
     this.booksApiService
       .findAll({
         page: this.page(),
-        size: 10,
-        sortBy: 'title',
-        sortDir: 'asc',
+        size: 12,
+        sortBy: this.sortBy(),
+        sortDir: this.sortDir(),
         title: this.titleFilter() || undefined,
+        authorId: this.authorFilter() ?? undefined,
+        categoryId: this.categoryFilter() ?? undefined,
+        publicationYear: this.publicationYearFilter() ?? undefined,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -102,8 +155,18 @@ export class BooksListPage {
       });
   }
 
-  applyTitleFilter(value: string): void {
-    this.titleFilter.set(value.trim());
+  applyFilters(): void {
+    this.page.set(0);
+    this.loadBooks();
+  }
+
+  clearFilters(): void {
+    this.titleFilter.set('');
+    this.authorFilter.set(null);
+    this.categoryFilter.set(null);
+    this.publicationYearFilter.set(null);
+    this.sortBy.set('title');
+    this.sortDir.set('asc');
     this.page.set(0);
     this.loadBooks();
   }
@@ -117,9 +180,32 @@ export class BooksListPage {
     this.loadBooks(nextPage);
   }
 
-  startCreate(): void {
+  setViewMode(mode: BooksViewMode): void {
+    this.viewMode.set(mode);
+    this.syncQueryParams();
+  }
+
+  toggleCategoryTreeNode(categoryId: number): void {
+    const expanded = new Set(this.categoryTreeExpanded());
+    if (expanded.has(categoryId)) {
+      expanded.delete(categoryId);
+    } else {
+      expanded.add(categoryId);
+    }
+    this.categoryTreeExpanded.set(expanded);
+  }
+
+  filterByCategoryFromTree(categoryId: number): void {
+    this.categoryFilter.set(categoryId);
+    this.applyFilters();
+  }
+
+  openCreateModal(): void {
     this.editingBookId.set(null);
     this.formErrorMessage.set(null);
+    this.pendingImageFile.set(null);
+    this.pendingImageAltText.set('');
+    this.pendingImageName.set(null);
     this.form.reset({
       isbn: '',
       title: '',
@@ -129,11 +215,15 @@ export class BooksListPage {
       authorId: null,
       categoryId: null,
     });
+    this.showFormModal.set(true);
   }
 
-  startEdit(book: BookSummaryResponse): void {
+  openEditModal(book: BookSummaryResponse): void {
     this.editingBookId.set(book.id);
     this.formErrorMessage.set(null);
+    this.pendingImageFile.set(null);
+    this.pendingImageAltText.set('');
+    this.pendingImageName.set(null);
     this.form.reset({
       isbn: book.isbn,
       title: book.title,
@@ -143,6 +233,18 @@ export class BooksListPage {
       authorId: book.authorId,
       categoryId: book.categoryId,
     });
+    this.showFormModal.set(true);
+  }
+
+  closeFormModal(): void {
+    this.showFormModal.set(false);
+  }
+
+  onBookImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const selected = input.files?.[0] ?? null;
+    this.pendingImageFile.set(selected);
+    this.pendingImageName.set(selected?.name ?? null);
   }
 
   saveBook(): void {
@@ -177,12 +279,33 @@ export class BooksListPage {
 
     request$
       .pipe(
+        switchMap((book) => {
+          const imageFile = this.pendingImageFile();
+          if (!imageFile) {
+            return of(book);
+          }
+
+          return this.mediaApiService.uploadImage(imageFile, 'BOOKS').pipe(
+            switchMap((mediaAsset) =>
+              this.booksApiService.attachImages(book.id, {
+                images: [
+                  {
+                    mediaAssetId: mediaAsset.id,
+                    primaryImage: true,
+                    altText: this.pendingImageAltText() || undefined,
+                  },
+                ],
+              })
+            ),
+            map(() => book)
+          );
+        }),
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.saving.set(false))
       )
       .subscribe({
         next: () => {
-          this.startCreate();
+          this.closeFormModal();
           this.loadBooks();
           this.notificationService.success(
             editingBookId ? 'Book updated successfully' : 'Book created successfully'
@@ -230,6 +353,10 @@ export class BooksListPage {
       });
   }
 
+  isCategoryExpanded(categoryId: number): boolean {
+    return this.categoryTreeExpanded().has(categoryId);
+  }
+
   private loadCatalogData(): void {
     this.authorsApiService
       .findAll()
@@ -250,11 +377,27 @@ export class BooksListPage {
 
   private hydrateFromQueryParams(): void {
     const queryParams = this.route.snapshot.queryParamMap;
-    const page = Number(queryParams.get('booksPage') ?? '0');
-    const title = queryParams.get('booksTitle') ?? '';
 
-    this.page.set(Number.isNaN(page) ? 0 : Math.max(0, page));
-    this.titleFilter.set(title);
+    this.page.set(Math.max(0, Number(queryParams.get('booksPage') ?? '0') || 0));
+    this.titleFilter.set(queryParams.get('booksTitle') ?? '');
+    this.authorFilter.set(this.toNullableNumber(queryParams.get('booksAuthorId')));
+    this.categoryFilter.set(this.toNullableNumber(queryParams.get('booksCategoryId')));
+    this.publicationYearFilter.set(this.toNullableNumber(queryParams.get('booksYear')));
+
+    const sortBy = queryParams.get('booksSortBy');
+    if (sortBy === 'title' || sortBy === 'publicationYear' || sortBy === 'createdAt') {
+      this.sortBy.set(sortBy);
+    }
+
+    const sortDir = queryParams.get('booksSortDir');
+    if (sortDir === 'asc' || sortDir === 'desc') {
+      this.sortDir.set(sortDir);
+    }
+
+    const mode = queryParams.get('booksMode');
+    if (mode === 'list' || mode === 'kanban') {
+      this.viewMode.set(mode);
+    }
   }
 
   private syncQueryParams(): void {
@@ -263,9 +406,44 @@ export class BooksListPage {
       queryParams: {
         booksPage: this.page(),
         booksTitle: this.titleFilter() || null,
+        booksAuthorId: this.authorFilter() ?? null,
+        booksCategoryId: this.categoryFilter() ?? null,
+        booksYear: this.publicationYearFilter() ?? null,
+        booksSortBy: this.sortBy(),
+        booksSortDir: this.sortDir(),
+        booksMode: this.viewMode(),
       },
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
+  }
+
+  private toNullableNumber(value: string | null): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  private buildCategoryTree(categories: CategoryResponse[]): CategoryTreeNode[] {
+    const byParent = new Map<number | null, CategoryResponse[]>();
+
+    for (const category of categories) {
+      const group = byParent.get(category.parentId) ?? [];
+      group.push(category);
+      byParent.set(category.parentId, group);
+    }
+
+    const buildNode = (category: CategoryResponse): CategoryTreeNode => ({
+      id: category.id,
+      name: category.name,
+      children: (byParent.get(category.id) ?? [])
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(buildNode),
+    });
+
+    return (byParent.get(null) ?? []).sort((a, b) => a.name.localeCompare(b.name)).map(buildNode);
   }
 }

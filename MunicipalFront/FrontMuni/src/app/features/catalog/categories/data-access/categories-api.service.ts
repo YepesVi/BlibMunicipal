@@ -4,7 +4,12 @@ import { Observable } from 'rxjs';
 
 import { getApiUrl } from '../../../../core/api/api.config';
 import { API_ENDPOINTS } from '../../../../core/api/api-endpoints';
-import { CategoryResponse, CreateCategoryRequest, UpdateCategoryRequest } from './categories.dto';
+import {
+  CategoryResponse,
+  CategoryTreeResponse,
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+} from './categories.dto';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesApiService {
@@ -12,6 +17,16 @@ export class CategoriesApiService {
 
   findAll(): Observable<CategoryResponse[]> {
     return this.http.get<CategoryResponse[]>(getApiUrl(API_ENDPOINTS.catalog.categories));
+  }
+
+  findRoots(): Observable<CategoryResponse[]> {
+    return this.http.get<CategoryResponse[]>(getApiUrl(`${API_ENDPOINTS.catalog.categories}/roots`));
+  }
+
+  findTree(rootCategoryId: number): Observable<CategoryTreeResponse> {
+    return this.http.get<CategoryTreeResponse>(
+      getApiUrl(`${API_ENDPOINTS.catalog.categories}/${rootCategoryId}/tree`)
+    );
   }
 
   create(payload: CreateCategoryRequest): Observable<CategoryResponse> {

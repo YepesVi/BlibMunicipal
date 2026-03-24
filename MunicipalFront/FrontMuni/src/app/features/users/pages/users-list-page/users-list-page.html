@@ -3,7 +3,7 @@
     <h1>Users</h1>
     <div class="actions">
       @if (isAdmin()) {
-        <button type="button" (click)="startCreate()">New user</button>
+        <button type="button" (click)="openCreateModal()">New user</button>
       }
       <button type="button" (click)="loadUsers()" [disabled]="loading()">Reload</button>
     </div>
@@ -14,44 +14,23 @@
       Search by username
       <input #usernameFilterInput type="text" [value]="usernameFilter()" />
     </label>
-    <button type="button" (click)="applyUsernameFilter(usernameFilterInput.value)">Search</button>
+    <label>
+      Sort by
+      <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+        <option value="id">Id</option>
+        <option value="username">Username</option>
+        <option value="role">Role</option>
+      </select>
+    </label>
+    <label>
+      Direction
+      <select [ngModel]="sortDir()" (ngModelChange)="sortDir.set($event)">
+        <option value="asc">Asc</option>
+        <option value="desc">Desc</option>
+      </select>
+    </label>
+    <button type="button" (click)="usernameFilter.set(usernameFilterInput.value); applyFilters()">Apply</button>
   </div>
-
-  @if (isAdmin()) {
-    <form [formGroup]="form" (ngSubmit)="saveUser()" class="user-form">
-      <h2>{{ editingUserId() ? 'Edit user' : 'Create user' }}</h2>
-
-      <label>
-        Username
-        <input type="text" formControlName="username" />
-      </label>
-
-      <label>
-        Password
-        <input
-          type="password"
-          formControlName="password"
-          [placeholder]="editingUserId() ? 'Leave empty to keep current password' : ''"
-        />
-      </label>
-
-      <label>
-        Role
-        <select formControlName="role">
-          <option value="ADMIN">ADMIN</option>
-          <option value="EMPLOYEE">EMPLOYEE</option>
-        </select>
-      </label>
-
-      @if (formErrorMessage()) {
-        <p class="error">{{ formErrorMessage() }}</p>
-      }
-
-      <button type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving...' : editingUserId() ? 'Update user' : 'Create user' }}
-      </button>
-    </form>
-  }
 
   @if (loading()) {
     <p>Loading users...</p>
@@ -79,7 +58,7 @@
             <td>{{ user.role }}</td>
             @if (isAdmin()) {
               <td class="actions-cell">
-                <button type="button" (click)="startEdit(user)">Edit</button>
+                <button type="button" (click)="openEditModal(user)">Edit</button>
                 <button type="button" class="danger" (click)="deleteUser(user)">Delete</button>
               </td>
             }
@@ -99,5 +78,47 @@
         Next
       </button>
     </footer>
+  }
+
+  @if (showFormModal() && isAdmin()) {
+    <div class="modal-backdrop" (click)="closeFormModal()"></div>
+    <section class="modal" role="dialog" aria-modal="true">
+      <form [formGroup]="form" (ngSubmit)="saveUser()" class="user-form">
+        <h2>{{ editingUserId() ? 'Edit user' : 'Create user' }}</h2>
+
+        <label>
+          Username
+          <input type="text" formControlName="username" />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            formControlName="password"
+            [placeholder]="editingUserId() ? 'Leave empty to keep current password' : ''"
+          />
+        </label>
+
+        <label>
+          Role
+          <select formControlName="role">
+            <option value="ADMIN">ADMIN</option>
+            <option value="EMPLOYEE">EMPLOYEE</option>
+          </select>
+        </label>
+
+        @if (formErrorMessage()) {
+          <p class="error">{{ formErrorMessage() }}</p>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="secondary" (click)="closeFormModal()">Cancel</button>
+          <button type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : editingUserId() ? 'Update user' : 'Create user' }}
+          </button>
+        </div>
+      </form>
+    </section>
   }
 </section>

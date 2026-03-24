@@ -1,0 +1,506 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.Biblioteca:MunicipalBack >--------------------
+[INFO] Building MunicipalBack 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.3:run (default-cli) > test-compile @ MunicipalBack >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ MunicipalBack ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ MunicipalBack ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ MunicipalBack ---
+[INFO] skip non existing resourceDirectory D:\Univerisidad\9no\dist y paral\BlibMunicipal\MunicipalBack\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ MunicipalBack ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:4.0.3:run (default-cli) < test-compile @ MunicipalBack <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.3:run (default-cli) @ MunicipalBack ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-20T10:40:05.638-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] c.B.M.MunicipalBackApplication           : Starting MunicipalBackApplication using Java 21.0.9 with PID 13588 (D:\Univerisidad\9no\dist y paral\BlibMunicipal\MunicipalBack\target\classes started by Andres in D:\Univerisidad\9no\dist y paral\BlibMunicipal\MunicipalBack)
+2026-03-20T10:40:05.643-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] c.B.M.MunicipalBackApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-03-20T10:40:05.732-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-20T10:40:05.732-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-20T10:40:06.970-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-20T10:40:07.217-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 235 ms. Found 7 JPA repository interfaces.
+2026-03-20T10:40:08.120-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-03-20T10:40:08.137-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-20T10:40:08.138-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-20T10:40:08.224-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2490 ms
+2026-03-20T10:40:08.534-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-20T10:40:08.621-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-20T10:40:09.160-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-20T10:40:09.200-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-20T10:40:10.542-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@33576a93
+2026-03-20T10:40:10.544-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-20T10:40:10.698-05:00  WARN 13588 --- [MunicipalBack] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-20T10:40:11.010-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://ep-weathered-dust-addxibia-pooler.c-2.us-east-1.aws.neon.tech/BlibMunicipalDB?sslmode=require&channel_binding=require]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.8
+	Default catalog/schema: BlibMunicipalDB/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-20T10:40:12.605-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-20T10:40:13.471-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-20T10:40:13.547-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-20T10:40:13.850-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-20T10:40:13.850-05:00  WARN 13588 --- [MunicipalBack] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-20T10:40:14.970-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-03-20T10:40:14.976-05:00  INFO 13588 --- [MunicipalBack] [  restartedMain] c.B.M.MunicipalBackApplication           : Started MunicipalBackApplication in 9.966 seconds (process running for 10.896)
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+2026-03-20T10:40:19.734-05:00  INFO 13588 --- [MunicipalBack] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-20T10:40:19.734-05:00  INFO 13588 --- [MunicipalBack] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-20T10:40:19.736-05:00  INFO 13588 --- [MunicipalBack] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id_card=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.author_id=? order by b1_0.title
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id_card=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.author_id=? order by b1_0.title
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.username desc offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.role desc offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.role offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: delete from users where id=?
+2026-03-20T10:41:21.317-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-6] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23503
+2026-03-20T10:41:21.317-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-6] org.hibernate.orm.jdbc.error             : ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"
+  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".
+2026-03-20T10:41:21.404-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"<EOL>  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".] [delete from users where id=?]; SQL [delete from users where id=?]; constraint [fk_refresh_token_user]]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: delete from users where id=?
+2026-03-20T10:41:26.747-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-1] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23503
+2026-03-20T10:41:26.748-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-1] org.hibernate.orm.jdbc.error             : ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"
+  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".
+2026-03-20T10:41:26.820-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"<EOL>  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".] [delete from users where id=?]; SQL [delete from users where id=?]; constraint [fk_refresh_token_user]]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where lower(b1_0.title) like ? escape '' order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where lower(b1_0.title) like ? escape '' order by b1_0.title desc offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.id=?
+Hibernate: select b1_0.id from books b1_0 where b1_0.isbn=? fetch first ? rows only
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select ma1_0.id from media_assets ma1_0 where ma1_0.public_id=? fetch first ? rows only
+Hibernate: insert into media_assets (content_type,created_at,format,height_px,original_filename,public_id,resource_type,secure_url,size_in_bytes,width_px) values (?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.id=?
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select bi1_0.id from book_images bi1_0 where bi1_0.book_id=? and bi1_0.media_asset_id=? fetch first ? rows only
+Hibernate: insert into book_images (alt_text,book_id,created_at,media_asset_id,primary_image,sort_order) values (?,?,?,?,?,?)
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: delete from users where id=?
+2026-03-20T10:44:31.275-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-5] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23503
+2026-03-20T10:44:31.275-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-5] org.hibernate.orm.jdbc.error             : ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"
+  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".
+2026-03-20T10:44:31.347-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"<EOL>  Detail: Key (id)=(1) is still referenced from table "refresh_tokens".] [delete from users where id=?]; SQL [delete from users where id=?]; constraint [fk_refresh_token_user]]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: delete from users where id=?
+2026-03-20T10:44:42.254-05:00  WARN 13588 --- [MunicipalBack] [io-8080-exec-10] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23503
+2026-03-20T10:44:42.254-05:00  WARN 13588 --- [MunicipalBack] [io-8080-exec-10] org.hibernate.orm.jdbc.error             : ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"
+  Detail: Key (id)=(3) is still referenced from table "refresh_tokens".
+2026-03-20T10:44:42.323-05:00  WARN 13588 --- [MunicipalBack] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: update or delete on table "users" violates foreign key constraint "fk_refresh_token_user" on table "refresh_tokens"<EOL>  Detail: Key (id)=(3) is still referenced from table "refresh_tokens".] [delete from users where id=?]; SQL [delete from users where id=?]; constraint [fk_refresh_token_user]]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select c1_0.id from categories c1_0 where c1_0.parent_id=? fetch first ? rows only
+2026-03-20T10:48:25.032-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.Biblioteca.MunicipalBack.shared.exceptions.ConflictException: Cannot delete category because it has child categories]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select c1_0.id from categories c1_0 where c1_0.parent_id=? fetch first ? rows only
+Hibernate: select b1_0.id from books b1_0 where b1_0.category_id=? fetch first ? rows only
+Hibernate: delete from categories where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.token=?
+Hibernate: insert into refresh_tokens (created_at,expires_at,revoked,token,user_id) values (?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: update refresh_tokens set expires_at=?,revoked=?,token=?,user_id=? where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select c1_0.id from categories c1_0 where c1_0.parent_id=? fetch first ? rows only
+Hibernate: select b1_0.id from books b1_0 where b1_0.category_id=? fetch first ? rows only
+2026-03-20T10:53:00.212-05:00  WARN 13588 --- [MunicipalBack] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.Biblioteca.MunicipalBack.shared.exceptions.ConflictException: Cannot delete category because it has books associated]
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.token=?
+Hibernate: update refresh_tokens set expires_at=?,revoked=?,token=?,user_id=? where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.user_id=?
+Hibernate: insert into refresh_tokens (created_at,expires_at,revoked,token,user_id) values (?,?,?,?,?)
+Hibernate: delete from refresh_tokens where id=?
+Hibernate: delete from refresh_tokens where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.id=?
+Hibernate: update users set password=?,role=?,username=? where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.token=?
+Hibernate: update refresh_tokens set expires_at=?,revoked=?,token=?,user_id=? where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.user_id=?
+Hibernate: insert into refresh_tokens (created_at,expires_at,revoked,token,user_id) values (?,?,?,?,?)
+Hibernate: delete from refresh_tokens where id=?
+Hibernate: delete from refresh_tokens where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.category_id=? order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id_card=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.author_id=? order by b1_0.title
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id_card=?
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where b1_0.author_id=? order by b1_0.title
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.token=?
+Hibernate: update refresh_tokens set expires_at=?,revoked=?,token=?,user_id=? where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select rt1_0.id,rt1_0.created_at,rt1_0.expires_at,rt1_0.revoked,rt1_0.token,rt1_0.user_id from refresh_tokens rt1_0 where rt1_0.user_id=?
+Hibernate: insert into refresh_tokens (created_at,expires_at,revoked,token,user_id) values (?,?,?,?,?)
+Hibernate: delete from refresh_tokens where id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select b1_0.id,b1_0.author_id,b1_0.category_id,b1_0.created_at,b1_0.description,b1_0.isbn,b1_0.publication_year,b1_0.publisher,b1_0.title,b1_0.updated_at from books b1_0 where 1=1 order by b1_0.title offset ? rows fetch first ? rows only
+Hibernate: select i1_0.book_id,i1_0.id,i1_0.alt_text,i1_0.created_at,i1_0.media_asset_id,i1_0.primary_image,i1_0.sort_order from book_images i1_0 where i1_0.book_id=?
+Hibernate: select ma1_0.id,ma1_0.content_type,ma1_0.created_at,ma1_0.format,ma1_0.height_px,ma1_0.original_filename,ma1_0.public_id,ma1_0.resource_type,ma1_0.secure_url,ma1_0.size_in_bytes,ma1_0.width_px from media_assets ma1_0 where ma1_0.id=?
+Hibernate: select a1_0.id,a1_0.biography,a1_0.created_at,a1_0.full_name,a1_0.id_card,a1_0.nationality,a1_0.updated_at from authors a1_0 where a1_0.id=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0 where c1_0.id=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 order by u1_0.id offset ? rows fetch first ? rows only
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0
+Hibernate: select u1_0.id,u1_0.password,u1_0.role,u1_0.username from users u1_0 where u1_0.username=?
+Hibernate: select c1_0.id,c1_0.created_at,c1_0.description,c1_0.name,c1_0.parent_id,c1_0.updated_at from categories c1_0

@@ -1,9 +1,10 @@
- package com.Biblioteca.MunicipalBack.catalog.books.repository;
+package com.Biblioteca.MunicipalBack.catalog.books.repository;
 
 import com.Biblioteca.MunicipalBack.catalog.books.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
@@ -15,4 +16,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     boolean existsByAuthorId(Long authorId);
 
     boolean existsByCategoryId(Long categoryId);
+
+    List<Book> findByAuthorIdOrderByTitleAsc(Long authorId);
 }

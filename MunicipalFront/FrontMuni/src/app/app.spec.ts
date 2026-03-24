@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { App } from './app';
 import { AuthService } from './core/auth/auth.service';
 import { NotificationService } from './shared/services/notification.service';
+import { ThemeService } from './shared/services/theme.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -26,6 +27,13 @@ describe('App', () => {
           useValue: {
             success: () => undefined,
             error: () => undefined,
+          },
+        },
+        {
+          provide: ThemeService,
+          useValue: {
+            preference: () => 'auto',
+            setPreference: () => undefined,
           },
         },
       ],

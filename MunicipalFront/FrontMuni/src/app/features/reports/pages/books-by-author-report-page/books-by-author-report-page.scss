@@ -1,0 +1,104 @@
+.reports-page {
+  margin: 2rem;
+  display: grid;
+  gap: 1rem;
+
+  header h1 {
+    margin: 0;
+  }
+
+  header p {
+    margin: 0.4rem 0 0;
+    color: var(--app-muted);
+  }
+}
+
+.report-form {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+
+  label {
+    display: grid;
+    gap: 0.3rem;
+    font-weight: 600;
+  }
+
+  input {
+    border: 1px solid var(--app-border);
+    background: var(--app-surface);
+    color: var(--app-text);
+    border-radius: 8px;
+    padding: 0.5rem 0.65rem;
+    font: inherit;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  button {
+    border: 1px solid var(--app-primary);
+    border-radius: 8px;
+    background: var(--app-primary);
+    color: #fff;
+    padding: 0.5rem 0.85rem;
+    cursor: pointer;
+  }
+
+  .secondary {
+    border-color: var(--app-muted);
+    background: var(--app-muted);
+  }
+}
+
+.report-preview {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 1rem;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.7rem;
+  }
+
+  th,
+  td {
+    text-align: left;
+    border-bottom: 1px solid var(--app-border);
+    padding: 0.65rem;
+  }
+
+  th {
+    background: color-mix(in srgb, var(--app-surface) 92%, #000 3%);
+  }
+}
+
+.error {
+  color: #b91c1c;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .reports-page {
+    margin: 1rem;
+  }
+
+  .report-form .actions {
+    flex-direction: column;
+  }
+
+  .report-preview {
+    overflow-x: auto;
+  }
+}

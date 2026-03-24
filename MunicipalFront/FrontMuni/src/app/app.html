@@ -5,11 +5,23 @@
       <a routerLink="/books" routerLinkActive="active">Books</a>
       <a routerLink="/authors" routerLinkActive="active">Authors</a>
       <a routerLink="/categories" routerLinkActive="active">Categories</a>
+      <a routerLink="/reports" routerLinkActive="active">Reports</a>
       @if (authService.session()?.role === 'ADMIN') {
         <a routerLink="/users" routerLinkActive="active">Users</a>
       }
     </nav>
-    <button type="button" (click)="logout()">Logout</button>
+    <div class="right-actions">
+      <select
+        [value]="themeService.preference()"
+        (change)="updateTheme($any($event.target).value)"
+        aria-label="Theme selection"
+      >
+        <option value="auto">Theme: Auto</option>
+        <option value="light">Theme: Light</option>
+        <option value="dark">Theme: Dark</option>
+      </select>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
   </header>
 }
 

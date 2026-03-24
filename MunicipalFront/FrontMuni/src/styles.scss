@@ -19,6 +19,24 @@ html {
   );
 }
 
+:root {
+  --app-bg: #f6f7f9;
+  --app-surface: #ffffff;
+  --app-border: #e5e7eb;
+  --app-text: #1f2937;
+  --app-muted: #64748b;
+  --app-primary: #0b63af;
+}
+
+html[data-theme='dark'] {
+  --app-bg: #0b1220;
+  --app-surface: #111a2c;
+  --app-border: #1f2b45;
+  --app-text: #e2e8f0;
+  --app-muted: #94a3b8;
+  --app-primary: #5aa8ff;
+}
+
 body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
@@ -28,13 +46,17 @@ body {
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: var(--app-bg);
+  color: var(--app-text);
   font: var(--mat-sys-body-medium);
 
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+}
+
+html[data-theme='dark'] body {
+  color-scheme: dark;
 }
 
 .snackbar-success {

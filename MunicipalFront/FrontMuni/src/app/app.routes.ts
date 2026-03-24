@@ -50,6 +50,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/users/pages/users-list-page/users-list-page').then((m) => m.UsersListPage),
   },
+  {
+    path: 'reports',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/reports/pages/books-by-author-report-page/books-by-author-report-page').then(
+        (m) => m.BooksByAuthorReportPage
+      ),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },
 ];

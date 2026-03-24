@@ -1,0 +1,67 @@
+<section class="reports-page">
+  <header>
+    <h1>Books Report by Author</h1>
+    <p>Generate a preview by author ID card and download the official PDF report.</p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="generatePreview()" class="report-form">
+    <label>
+      Author ID card
+      <input type="text" formControlName="idCard" placeholder="e.g. 0102030405" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Generating...' : 'Generate Preview' }}
+      </button>
+      <button
+        type="button"
+        (click)="downloadPdf()"
+        [disabled]="downloading() || form.invalid"
+        class="secondary"
+      >
+        {{ downloading() ? 'Downloading...' : 'Download PDF' }}
+      </button>
+    </div>
+  </form>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (report(); as reportData) {
+    <article class="report-preview">
+      <h2>Preview</h2>
+      <p><strong>Author:</strong> {{ reportData.authorName }} ({{ reportData.authorIdCard }})</p>
+      <p><strong>Generated:</strong> {{ reportData.generatedAt | date: 'medium' }}</p>
+      <p><strong>Total books:</strong> {{ reportData.totalBooks }}</p>
+
+      @if (reportData.books.length === 0) {
+        <p>No books associated with this author.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>ISBN</th>
+              <th>Publisher</th>
+              <th>Year</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (book of reportData.books; track book.bookId) {
+              <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.publisher }}</td>
+                <td>{{ book.publicationYear }}</td>
+                <td>{{ book.categoryName }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </article>
+  }
+</section>

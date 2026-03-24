@@ -6,6 +6,7 @@ import { filter, startWith } from 'rxjs';
 
 import { AuthService } from './core/auth/auth.service';
 import { NotificationService } from './shared/services/notification.service';
+import { ThemePreference, ThemeService } from './shared/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class App {
   constructor(
     protected readonly authService: AuthService,
     private readonly router: Router,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    protected readonly themeService: ThemeService
   ) {
     this.router.events
       .pipe(
@@ -41,5 +43,9 @@ export class App {
         this.router.navigateByUrl('/login');
       },
     });
+  }
+
+  updateTheme(preference: ThemePreference): void {
+    this.themeService.setPreference(preference);
   }
 }
