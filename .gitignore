@@ -84,3 +84,6 @@ Thumbs.db
 
 # Local OpenCode runtime logs
 **/.opencode-*.log
+
+**/.editorconfig
+**/.prettierrc
