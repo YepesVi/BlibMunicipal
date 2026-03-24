@@ -8,10 +8,10 @@
         </button>
         <button
           type="button"
-          [class.active]="viewMode() === 'kanban'"
-          (click)="setViewMode('kanban')"
+          [class.active]="viewMode() === 'cards'"
+          (click)="setViewMode('cards')"
         >
-          Kanban
+          Cards
         </button>
       </div>
       @if (isAdmin()) {
@@ -76,7 +76,7 @@
         <label>
           Category
           <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
-            <option [ngValue]="null">All categories</option>
+            <option [ngValue]="null">All categories (includes children)</option>
             @for (category of categories(); track category.id) {
               <option [ngValue]="category.id">{{ category.name }}</option>
             }
@@ -151,28 +151,22 @@
           </tbody>
         </table>
       } @else {
-        <div class="kanban-board">
-          @for (column of kanbanColumns(); track column.categoryId) {
-            <article class="kanban-column">
-              <h3>{{ column.categoryName }} ({{ column.books.length }})</h3>
-              <div class="kanban-cards">
-                @for (book of column.books; track book.id) {
-                  <div class="book-card">
-                    @if (book.primaryImageUrl) {
-                      <img [src]="book.primaryImageUrl" [alt]="book.title" />
-                    }
-                    <h4>{{ book.title }}</h4>
-                    <p>{{ book.authorName }}</p>
-                    <small>{{ book.isbn }} • {{ book.publicationYear }}</small>
-                    @if (isAdmin()) {
-                      <div class="card-actions">
-                        <button type="button" (click)="openEditModal(book)">Edit</button>
-                        <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
-                      </div>
-                    }
-                  </div>
-                }
-              </div>
+        <div class="cards-grid">
+          @for (book of books(); track book.id) {
+            <article class="book-card">
+              @if (book.primaryImageUrl) {
+                <img [src]="book.primaryImageUrl" [alt]="book.title" />
+              }
+              <h4>{{ book.title }}</h4>
+              <p>{{ book.authorName }}</p>
+              <small>{{ book.categoryName }}</small>
+              <small>{{ book.isbn }} • {{ book.publicationYear }}</small>
+              @if (isAdmin()) {
+                <div class="card-actions">
+                  <button type="button" (click)="openEditModal(book)">Edit</button>
+                  <button type="button" class="danger" (click)="deleteBook(book)">Delete</button>
+                </div>
+              }
             </article>
           }
         </div>
@@ -197,11 +191,70 @@
     <section class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
       <form [formGroup]="form" (ngSubmit)="saveBook()" class="book-form">
         <h2>{{ editingBookId() ? 'Edit book' : 'Create book' }}</h2>
-        <label>ISBN <input type="text" formControlName="isbn" /></label>
-        <label>Title <input type="text" formControlName="title" /></label>
-        <label>Publisher <input type="text" formControlName="publisher" /></label>
-        <label>Publication year <input type="number" formControlName="publicationYear" /></label>
-        <label>Description <textarea rows="3" formControlName="description"></textarea></label>
+        @if (modalLoading()) {
+          <p class="muted">Loading book details...</p>
+        }
+        <label>
+          ISBN
+          <input type="text" formControlName="isbn" />
+          @if (form.controls.isbn.touched && form.controls.isbn.hasError('required')) {
+            <p class="field-error">ISBN is required.</p>
+          }
+          @if (form.controls.isbn.touched && form.controls.isbn.hasError('minlength')) {
+            <p class="field-error">ISBN must be at least 5 characters.</p>
+          }
+          @if (form.controls.isbn.touched && form.controls.isbn.hasError('maxlength')) {
+            <p class="field-error">ISBN must not exceed 30 characters.</p>
+          }
+        </label>
+        <label>
+          Title
+          <input type="text" formControlName="title" />
+          @if (form.controls.title.touched && form.controls.title.hasError('required')) {
+            <p class="field-error">Title is required.</p>
+          }
+          @if (form.controls.title.touched && form.controls.title.hasError('minlength')) {
+            <p class="field-error">Title must be at least 2 characters.</p>
+          }
+          @if (form.controls.title.touched && form.controls.title.hasError('maxlength')) {
+            <p class="field-error">Title must not exceed 200 characters.</p>
+          }
+        </label>
+        <label>
+          Publisher
+          <input type="text" formControlName="publisher" />
+          @if (form.controls.publisher.touched && form.controls.publisher.hasError('required')) {
+            <p class="field-error">Publisher is required.</p>
+          }
+          @if (form.controls.publisher.touched && form.controls.publisher.hasError('minlength')) {
+            <p class="field-error">Publisher must be at least 2 characters.</p>
+          }
+          @if (form.controls.publisher.touched && form.controls.publisher.hasError('maxlength')) {
+            <p class="field-error">Publisher must not exceed 150 characters.</p>
+          }
+        </label>
+        <label>
+          Publication year
+          <input type="number" formControlName="publicationYear" />
+          @if (
+            form.controls.publicationYear.touched && form.controls.publicationYear.hasError('required')
+          ) {
+            <p class="field-error">Publication year is required.</p>
+          }
+          @if (form.controls.publicationYear.touched && form.controls.publicationYear.hasError('min')) {
+            <p class="field-error">Publication year must be 1000 or greater.</p>
+          }
+          @if (form.controls.publicationYear.touched && form.controls.publicationYear.hasError('max')) {
+            <p class="field-error">Publication year must be 9999 or lower.</p>
+          }
+        </label>
+        <label>
+          Description
+          <textarea rows="3" formControlName="description"></textarea>
+          @if (form.controls.description.touched && form.controls.description.hasError('maxlength')) {
+            <p class="field-error">Description must not exceed 2000 characters.</p>
+          }
+        </label>
         <label>
           Author
           <select formControlName="authorId">
@@ -210,6 +263,9 @@
               <option [ngValue]="author.id">{{ author.fullName }}</option>
             }
           </select>
+          @if (form.controls.authorId.touched && form.controls.authorId.hasError('required')) {
+            <p class="field-error">Author is required.</p>
+          }
         </label>
         <label>
           Category
@@ -219,6 +275,9 @@
               <option [ngValue]="category.id">{{ category.name }}</option>
             }
           </select>
+          @if (form.controls.categoryId.touched && form.controls.categoryId.hasError('required')) {
+            <p class="field-error">Category is required.</p>
+          }
         </label>
 
         <label>
@@ -231,10 +290,50 @@
             >Image alt text
             <input
               type="text"
+              maxlength="255"
               [value]="pendingImageAltText()"
               (input)="pendingImageAltText.set($any($event.target).value)"
             />
           </label>
+          @if (pendingImageAltText().trim().length > 255) {
+            <p class="field-error">Image alt text must not exceed 255 characters.</p>
+          }
+          <button type="button" class="secondary" (click)="clearPendingImage()">Clear selected image</button>
+        }
+
+        @if (editingBookId()) {
+          <section class="existing-images">
+            <h3>Current Images</h3>
+            @if (existingImages().length === 0) {
+              <p class="muted">This book does not have images yet.</p>
+            } @else {
+              <div class="image-grid">
+                @for (image of existingImages(); track image.id) {
+                  <article class="image-card">
+                    <img [src]="image.secureUrl" [alt]="image.altText || 'Book image'" />
+                    <p class="muted">{{ image.altText || 'No alt text' }}</p>
+                    <div class="image-actions">
+                      <button
+                        type="button"
+                        [disabled]="image.primaryImage || imageActionLoading()"
+                        (click)="setPrimaryImage(image.id)"
+                      >
+                        {{ image.primaryImage ? 'Primary image' : 'Set as primary' }}
+                      </button>
+                      <button
+                        type="button"
+                        class="danger"
+                        [disabled]="imageActionLoading()"
+                        (click)="removeImage(image.id)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </article>
+                }
+              </div>
+            }
+          </section>
         }
 
         @if (formErrorMessage()) {

@@ -6,11 +6,23 @@
     <label>
       Username
       <input type="text" formControlName="username" autocomplete="username" />
+      @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+        <p class="field-error">Username is required.</p>
+      }
+      @if (form.controls.username.touched && form.controls.username.hasError('minlength')) {
+        <p class="field-error">Username must be at least 4 characters.</p>
+      }
+      @if (form.controls.username.touched && form.controls.username.hasError('maxlength')) {
+        <p class="field-error">Username must not exceed 80 characters.</p>
+      }
     </label>
 
     <label>
       Password
       <input type="password" formControlName="password" autocomplete="current-password" />
+      @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+        <p class="field-error">Password is required.</p>
+      }
     </label>
 
     @if (errorMessage()) {

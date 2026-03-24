@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
+import { AuthorsApiService } from '../../../catalog/authors/data-access/authors-api.service';
+import { AuthorResponse } from '../../../catalog/authors/data-access/authors.dto';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ReportsApiService } from '../../data-access/reports-api.service';
 import { BooksByAuthorReportResponse } from '../../data-access/reports.dto';
@@ -17,20 +20,37 @@ import { BooksByAuthorReportResponse } from '../../data-access/reports.dto';
 export class BooksByAuthorReportPage {
   private readonly formBuilder = inject(FormBuilder);
   private readonly reportsApiService = inject(ReportsApiService);
+  private readonly authorsApiService = inject(AuthorsApiService);
   private readonly notificationService = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(false);
   readonly downloading = signal(false);
+  readonly loadingAuthors = signal(false);
+  readonly authors = signal<AuthorResponse[]>([]);
   readonly report = signal<BooksByAuthorReportResponse | null>(null);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly form = this.formBuilder.nonNullable.group({
-    idCard: ['', [Validators.required, Validators.minLength(4)]],
+  readonly form = this.formBuilder.group({
+    authorId: this.formBuilder.control<number | null>(null, [Validators.required]),
   });
+
+  constructor() {
+    this.loadAuthors();
+  }
 
   generatePreview(): void {
     if (this.form.invalid || this.loading()) {
       this.form.markAllAsTouched();
+      if (!this.loading()) {
+        this.notificationService.error('Please select an author to generate the report');
+      }
+      return;
+    }
+
+    const idCard = this.getSelectedAuthorIdCard();
+    if (!idCard) {
+      this.notificationService.error('Please select a valid author');
       return;
     }
 
@@ -38,7 +58,7 @@ export class BooksByAuthorReportPage {
     this.errorMessage.set(null);
 
     this.reportsApiService
-      .getBooksByAuthorIdCard(this.form.getRawValue().idCard.trim())
+      .getBooksByAuthorIdCard(idCard)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (report) => {
@@ -55,7 +75,7 @@ export class BooksByAuthorReportPage {
   }
 
   downloadPdf(): void {
-    const idCard = this.form.getRawValue().idCard.trim();
+    const idCard = this.getSelectedAuthorIdCard();
     if (!idCard || this.downloading()) {
       return;
     }
@@ -79,5 +99,31 @@ export class BooksByAuthorReportPage {
           this.notificationService.error(message);
         },
       });
+  }
+
+  private loadAuthors(): void {
+    this.loadingAuthors.set(true);
+    this.authorsApiService
+      .findAll()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loadingAuthors.set(false))
+      )
+      .subscribe({
+        next: (authors) => this.authors.set(authors),
+        error: (error: unknown) => {
+          const message = error instanceof Error ? error.message : 'Could not load authors';
+          this.notificationService.error(message);
+        },
+      });
+  }
+
+  private getSelectedAuthorIdCard(): string | null {
+    const authorId = this.form.getRawValue().authorId;
+    if (!authorId) {
+      return null;
+    }
+
+    return this.authors().find((author) => author.id === authorId)?.idCard ?? null;
   }
 }

@@ -35,10 +35,10 @@ export class AuthorsListPage {
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
 
   readonly form = this.formBuilder.nonNullable.group({
-    idCard: ['', [Validators.required, Validators.minLength(5)]],
-    fullName: ['', [Validators.required, Validators.minLength(3)]],
-    nationality: ['', [Validators.required, Validators.minLength(2)]],
-    biography: [''],
+    idCard: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
+    fullName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
+    nationality: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
+    biography: ['', [Validators.maxLength(2000)]],
   });
 
   constructor() {
@@ -103,6 +103,9 @@ export class AuthorsListPage {
   saveAuthor(): void {
     if (this.form.invalid || this.saving()) {
       this.form.markAllAsTouched();
+      if (!this.saving()) {
+        this.notificationService.error('Please fix the highlighted author form fields');
+      }
       return;
     }
 

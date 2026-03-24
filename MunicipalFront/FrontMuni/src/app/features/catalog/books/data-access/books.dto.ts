@@ -25,8 +25,18 @@ export interface BookResponse {
   categoryId: number;
   categoryName: string;
   primaryImageUrl: string | null;
+  images: BookImageResponse[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface BookImageResponse {
+  id: number;
+  mediaAssetId: number;
+  secureUrl: string;
+  primaryImage: boolean;
+  sortOrder: number;
+  altText: string | null;
 }
 
 export interface CreateBookRequest {

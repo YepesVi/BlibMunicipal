@@ -70,4 +70,10 @@ html[data-theme='dark'] body {
   --mat-snack-bar-button-color: #fee2e2;
   --mdc-snackbar-supporting-text-color: #fef2f2;
 }
+
+.field-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.82rem;
+}
 /* You can add global styles to this file, and also import other style files */

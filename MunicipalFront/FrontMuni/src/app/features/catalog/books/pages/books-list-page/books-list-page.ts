@@ -15,9 +15,13 @@ import { AuthorResponse } from '../../../authors/data-access/authors.dto';
 import { CategoriesApiService } from '../../../categories/data-access/categories-api.service';
 import { CategoryResponse } from '../../../categories/data-access/categories.dto';
 import { BooksApiService } from '../../data-access/books-api.service';
-import { BookSummaryResponse, CreateBookRequest } from '../../data-access/books.dto';
+import {
+  BookImageResponse,
+  BookSummaryResponse,
+  CreateBookRequest,
+} from '../../data-access/books.dto';
 
-type BooksViewMode = 'list' | 'kanban';
+type BooksViewMode = 'list' | 'cards';
 type SortByOption = 'title' | 'publicationYear' | 'createdAt';
 type SortDirectionOption = 'asc' | 'desc';
 
@@ -49,11 +53,14 @@ export class BooksListPage {
 
   readonly loading = signal(false);
   readonly saving = signal(false);
+  readonly modalLoading = signal(false);
+  readonly imageActionLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly formErrorMessage = signal<string | null>(null);
   readonly books = signal<BookSummaryResponse[]>([]);
   readonly authors = signal<AuthorResponse[]>([]);
   readonly categories = signal<CategoryResponse[]>([]);
+  readonly existingImages = signal<BookImageResponse[]>([]);
   readonly page = signal(0);
   readonly totalPages = signal(0);
   readonly totalElements = signal(0);
@@ -65,7 +72,7 @@ export class BooksListPage {
   readonly sortBy = signal<SortByOption>('title');
   readonly sortDir = signal<SortDirectionOption>('asc');
 
-  readonly viewMode = signal<BooksViewMode>('list');
+  readonly viewMode = signal<BooksViewMode>('cards');
   readonly categoryTreeExpanded = signal<Set<number>>(new Set());
   readonly showFormModal = signal(false);
   readonly editingBookId = signal<number | null>(null);
@@ -76,38 +83,17 @@ export class BooksListPage {
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
 
   readonly categoryTree = computed(() => this.buildCategoryTree(this.categories()));
-  readonly kanbanColumns = computed(() => {
-    const books = this.books();
-    const grouped = new Map<number, BookSummaryResponse[]>();
-
-    for (const category of this.categories()) {
-      grouped.set(category.id, []);
-    }
-
-    for (const book of books) {
-      const column = grouped.get(book.categoryId);
-      if (column) {
-        column.push(book);
-      }
-    }
-
-    return this.categories().map((category) => ({
-      categoryId: category.id,
-      categoryName: category.name,
-      books: grouped.get(category.id) ?? [],
-    }));
-  });
 
   readonly form = this.formBuilder.nonNullable.group({
-    isbn: ['', [Validators.required, Validators.minLength(5)]],
-    title: ['', [Validators.required, Validators.minLength(2)]],
-    publisher: ['', [Validators.required, Validators.minLength(2)]],
+    isbn: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
+    title: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
+    publisher: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
     publicationYear: this.formBuilder.nonNullable.control<number | null>(null, [
       Validators.required,
       Validators.min(1000),
       Validators.max(9999),
     ]),
-    description: [''],
+    description: ['', [Validators.maxLength(2000)]],
     authorId: this.formBuilder.nonNullable.control<number | null>(null, [Validators.required]),
     categoryId: this.formBuilder.nonNullable.control<number | null>(null, [Validators.required]),
   });
@@ -203,9 +189,11 @@ export class BooksListPage {
   openCreateModal(): void {
     this.editingBookId.set(null);
     this.formErrorMessage.set(null);
+    this.modalLoading.set(false);
     this.pendingImageFile.set(null);
     this.pendingImageAltText.set('');
     this.pendingImageName.set(null);
+    this.existingImages.set([]);
     this.form.reset({
       isbn: '',
       title: '',
@@ -221,9 +209,11 @@ export class BooksListPage {
   openEditModal(book: BookSummaryResponse): void {
     this.editingBookId.set(book.id);
     this.formErrorMessage.set(null);
+    this.modalLoading.set(true);
     this.pendingImageFile.set(null);
     this.pendingImageAltText.set('');
     this.pendingImageName.set(null);
+    this.existingImages.set([]);
     this.form.reset({
       isbn: book.isbn,
       title: book.title,
@@ -234,10 +224,36 @@ export class BooksListPage {
       categoryId: book.categoryId,
     });
     this.showFormModal.set(true);
+
+    this.booksApiService
+      .findById(book.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (bookDetail) => {
+          this.form.reset({
+            isbn: bookDetail.isbn,
+            title: bookDetail.title,
+            publisher: bookDetail.publisher,
+            publicationYear: bookDetail.publicationYear,
+            description: bookDetail.description ?? '',
+            authorId: bookDetail.authorId,
+            categoryId: bookDetail.categoryId,
+          });
+          this.existingImages.set(bookDetail.images);
+          this.modalLoading.set(false);
+        },
+        error: (error: unknown) => {
+          const message = error instanceof Error ? error.message : 'Failed to load book details';
+          this.formErrorMessage.set(message);
+          this.notificationService.error(message);
+          this.modalLoading.set(false);
+        },
+      });
   }
 
   closeFormModal(): void {
     this.showFormModal.set(false);
+    this.modalLoading.set(false);
   }
 
   onBookImageSelected(event: Event): void {
@@ -247,9 +263,79 @@ export class BooksListPage {
     this.pendingImageName.set(selected?.name ?? null);
   }
 
+  clearPendingImage(): void {
+    this.pendingImageFile.set(null);
+    this.pendingImageName.set(null);
+    this.pendingImageAltText.set('');
+  }
+
+  setPrimaryImage(imageId: number): void {
+    const bookId = this.editingBookId();
+    if (!bookId || this.imageActionLoading()) {
+      return;
+    }
+
+    this.imageActionLoading.set(true);
+    this.booksApiService
+      .setPrimaryImage(bookId, imageId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.imageActionLoading.set(false))
+      )
+      .subscribe({
+        next: (updatedBook) => {
+          this.existingImages.set(updatedBook.images);
+          this.loadBooks(this.page());
+          this.notificationService.success('Primary image updated');
+        },
+        error: (error: unknown) => {
+          const message = error instanceof Error ? error.message : 'Failed to set primary image';
+          this.formErrorMessage.set(message);
+          this.notificationService.error(message);
+        },
+      });
+  }
+
+  removeImage(imageId: number): void {
+    const bookId = this.editingBookId();
+    if (!bookId || this.imageActionLoading()) {
+      return;
+    }
+
+    this.imageActionLoading.set(true);
+    this.booksApiService
+      .removeImage(bookId, imageId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.imageActionLoading.set(false))
+      )
+      .subscribe({
+        next: () => {
+          this.existingImages.update((images) => images.filter((image) => image.id !== imageId));
+          this.loadBooks(this.page());
+          this.notificationService.success('Image removed');
+        },
+        error: (error: unknown) => {
+          const message = error instanceof Error ? error.message : 'Failed to remove image';
+          this.formErrorMessage.set(message);
+          this.notificationService.error(message);
+        },
+      });
+  }
+
   saveBook(): void {
     if (this.form.invalid || this.saving()) {
       this.form.markAllAsTouched();
+      if (!this.saving()) {
+        this.notificationService.error('Please fix the highlighted book form fields');
+      }
+      return;
+    }
+
+    if (this.pendingImageAltText().trim().length > 255) {
+      const message = 'Image alt text must not exceed 255 characters';
+      this.formErrorMessage.set(message);
+      this.notificationService.error(message);
       return;
     }
 
@@ -291,13 +377,18 @@ export class BooksListPage {
                 images: [
                   {
                     mediaAssetId: mediaAsset.id,
-                    primaryImage: true,
+                    primaryImage: !editingBookId && this.existingImages().length === 0,
                     altText: this.pendingImageAltText() || undefined,
                   },
                 ],
               })
             ),
-            map(() => book)
+            map((updatedBook) => {
+              if (editingBookId) {
+                this.existingImages.set(updatedBook.images);
+              }
+              return book;
+            })
           );
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -395,7 +486,7 @@ export class BooksListPage {
     }
 
     const mode = queryParams.get('booksMode');
-    if (mode === 'list' || mode === 'kanban') {
+    if (mode === 'list' || mode === 'cards') {
       this.viewMode.set(mode);
     }
   }

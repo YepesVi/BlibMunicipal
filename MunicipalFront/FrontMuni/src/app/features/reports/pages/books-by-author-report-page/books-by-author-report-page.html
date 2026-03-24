@@ -1,13 +1,21 @@
 <section class="reports-page">
   <header>
     <h1>Books Report by Author</h1>
-    <p>Generate a preview by author ID card and download the official PDF report.</p>
+    <p>Generate a preview by selecting an author and download the official PDF report.</p>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="generatePreview()" class="report-form">
     <label>
-      Author ID card
-      <input type="text" formControlName="idCard" placeholder="e.g. 0102030405" />
+      Author
+      <select formControlName="authorId" [disabled]="loadingAuthors()">
+        <option [ngValue]="null">{{ loadingAuthors() ? 'Loading authors...' : 'Select an author' }}</option>
+        @for (author of authors(); track author.id) {
+          <option [ngValue]="author.id">{{ author.fullName }} ({{ author.idCard }})</option>
+        }
+      </select>
+      @if (form.controls.authorId.touched && form.controls.authorId.hasError('required')) {
+        <p class="field-error">Please select an author.</p>
+      }
     </label>
 
     <div class="actions">

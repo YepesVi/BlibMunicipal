@@ -15,16 +15,23 @@
   }
 
   .filters {
-    display: flex;
-    gap: 0.5rem;
-    align-items: end;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 0.6rem;
     margin-bottom: 1rem;
 
     label {
       display: grid;
       gap: 0.25rem;
       font-weight: 600;
+      font-size: 0.9rem;
     }
+  }
+
+  .filter-actions {
+    display: flex;
+    align-items: end;
+    gap: 0.5rem;
   }
 
   .user-form {
@@ -60,6 +67,20 @@
     color: var(--app-text);
     padding: 0.45rem 0.8rem;
     cursor: pointer;
+  }
+
+  button.secondary {
+    background: transparent;
+  }
+
+  input,
+  select {
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    font: inherit;
+    background: var(--app-surface);
+    color: var(--app-text);
   }
 
   table {
@@ -126,4 +147,14 @@
 
 .error {
   color: #b91c1c;
+}
+
+@media (max-width: 900px) {
+  .users-page {
+    margin: 1rem;
+  }
+
+  .users-page .filters {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
 }

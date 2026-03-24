@@ -36,6 +36,10 @@ export class BooksApiService {
     return this.http.post<BookResponse>(getApiUrl(API_ENDPOINTS.catalog.books), payload);
   }
 
+  findById(bookId: number): Observable<BookResponse> {
+    return this.http.get<BookResponse>(getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}`));
+  }
+
   update(bookId: number, payload: UpdateBookRequest): Observable<BookResponse> {
     return this.http.put<BookResponse>(getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}`), payload);
   }
@@ -48,6 +52,19 @@ export class BooksApiService {
     return this.http.post<BookResponse>(
       getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}/images`),
       payload
+    );
+  }
+
+  setPrimaryImage(bookId: number, bookImageId: number): Observable<BookResponse> {
+    return this.http.patch<BookResponse>(
+      getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}/images/${bookImageId}/primary`),
+      {}
+    );
+  }
+
+  removeImage(bookId: number, bookImageId: number): Observable<void> {
+    return this.http.delete<void>(
+      getApiUrl(`${API_ENDPOINTS.catalog.books}/${bookId}/images/${bookImageId}`)
     );
   }
 }

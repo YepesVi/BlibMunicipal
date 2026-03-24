@@ -11,8 +11,8 @@
 
   <div class="filters">
     <label>
-      Search by username
-      <input #usernameFilterInput type="text" [value]="usernameFilter()" />
+      Username
+      <input type="text" [ngModel]="usernameFilter()" (ngModelChange)="usernameFilter.set($event)" />
     </label>
     <label>
       Sort by
@@ -29,7 +29,11 @@
         <option value="desc">Desc</option>
       </select>
     </label>
-    <button type="button" (click)="usernameFilter.set(usernameFilterInput.value); applyFilters()">Apply</button>
+
+    <div class="filter-actions">
+      <button type="button" (click)="applyFilters()">Apply</button>
+      <button type="button" class="secondary" (click)="clearFilters()">Reset</button>
+    </div>
   </div>
 
   @if (loading()) {
@@ -89,6 +93,15 @@
         <label>
           Username
           <input type="text" formControlName="username" />
+          @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+            <p class="field-error">Username is required.</p>
+          }
+          @if (form.controls.username.touched && form.controls.username.hasError('minlength')) {
+            <p class="field-error">Username must be at least 4 characters.</p>
+          }
+          @if (form.controls.username.touched && form.controls.username.hasError('maxlength')) {
+            <p class="field-error">Username must not exceed 80 characters.</p>
+          }
         </label>
 
         <label>
@@ -98,6 +111,15 @@
             formControlName="password"
             [placeholder]="editingUserId() ? 'Leave empty to keep current password' : ''"
           />
+          @if (!editingUserId() && form.controls.password.touched && !form.controls.password.value) {
+            <p class="field-error">Password is required for new users.</p>
+          }
+          @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+            <p class="field-error">Password must be at least 8 characters.</p>
+          }
+          @if (form.controls.password.touched && form.controls.password.hasError('maxlength')) {
+            <p class="field-error">Password must not exceed 100 characters.</p>
+          }
         </label>
 
         <label>
@@ -106,6 +128,9 @@
             <option value="ADMIN">ADMIN</option>
             <option value="EMPLOYEE">EMPLOYEE</option>
           </select>
+          @if (form.controls.role.touched && form.controls.role.hasError('required')) {
+            <p class="field-error">Role is required.</p>
+          }
         </label>
 
         @if (formErrorMessage()) {

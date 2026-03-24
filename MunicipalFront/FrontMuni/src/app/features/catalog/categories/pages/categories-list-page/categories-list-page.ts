@@ -42,8 +42,8 @@ export class CategoriesListPage {
   readonly categoryTree = computed(() => this.buildTree(this.categories()));
 
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    description: [''],
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
+    description: ['', [Validators.maxLength(500)]],
     parentId: [''],
   });
 
@@ -104,6 +104,9 @@ export class CategoriesListPage {
   saveCategory(): void {
     if (this.form.invalid || this.saving()) {
       this.form.markAllAsTouched();
+      if (!this.saving()) {
+        this.notificationService.error('Please fix the highlighted category form fields');
+      }
       return;
     }
 

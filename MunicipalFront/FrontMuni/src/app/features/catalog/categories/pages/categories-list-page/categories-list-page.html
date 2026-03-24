@@ -75,8 +75,26 @@
     <section class="modal" role="dialog" aria-modal="true">
       <form [formGroup]="form" (ngSubmit)="saveCategory()" class="category-form">
         <h2>{{ editingCategoryId() ? 'Edit category' : 'Create category' }}</h2>
-        <label>Name <input type="text" formControlName="name" /></label>
-        <label>Description <textarea rows="2" formControlName="description"></textarea></label>
+        <label>
+          Name
+          <input type="text" formControlName="name" />
+          @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <p class="field-error">Category name is required.</p>
+          }
+          @if (form.controls.name.touched && form.controls.name.hasError('minlength')) {
+            <p class="field-error">Category name must be at least 2 characters.</p>
+          }
+          @if (form.controls.name.touched && form.controls.name.hasError('maxlength')) {
+            <p class="field-error">Category name must not exceed 120 characters.</p>
+          }
+        </label>
+        <label>
+          Description
+          <textarea rows="2" formControlName="description"></textarea>
+          @if (form.controls.description.touched && form.controls.description.hasError('maxlength')) {
+            <p class="field-error">Description must not exceed 500 characters.</p>
+          }
+        </label>
         <label>
           Parent category
           <select formControlName="parentId">

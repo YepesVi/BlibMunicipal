@@ -27,7 +27,8 @@
     font-weight: 600;
   }
 
-  input {
+  input,
+  select {
     border: 1px solid var(--app-border);
     background: var(--app-surface);
     color: var(--app-text);

@@ -56,10 +56,52 @@
     <section class="modal" role="dialog" aria-modal="true">
       <form [formGroup]="form" (ngSubmit)="saveAuthor()" class="author-form">
         <h2>{{ editingAuthorId() ? 'Edit author' : 'Create author' }}</h2>
-        <label>Id card <input type="text" formControlName="idCard" /></label>
-        <label>Full name <input type="text" formControlName="fullName" /></label>
-        <label>Nationality <input type="text" formControlName="nationality" /></label>
-        <label>Biography <textarea rows="3" formControlName="biography"></textarea></label>
+        <label>
+          Id card
+          <input type="text" formControlName="idCard" />
+          @if (form.controls.idCard.touched && form.controls.idCard.hasError('required')) {
+            <p class="field-error">Id card is required.</p>
+          }
+          @if (form.controls.idCard.touched && form.controls.idCard.hasError('minlength')) {
+            <p class="field-error">Id card must be at least 5 characters.</p>
+          }
+          @if (form.controls.idCard.touched && form.controls.idCard.hasError('maxlength')) {
+            <p class="field-error">Id card must not exceed 30 characters.</p>
+          }
+        </label>
+        <label>
+          Full name
+          <input type="text" formControlName="fullName" />
+          @if (form.controls.fullName.touched && form.controls.fullName.hasError('required')) {
+            <p class="field-error">Full name is required.</p>
+          }
+          @if (form.controls.fullName.touched && form.controls.fullName.hasError('minlength')) {
+            <p class="field-error">Full name must be at least 3 characters.</p>
+          }
+          @if (form.controls.fullName.touched && form.controls.fullName.hasError('maxlength')) {
+            <p class="field-error">Full name must not exceed 150 characters.</p>
+          }
+        </label>
+        <label>
+          Nationality
+          <input type="text" formControlName="nationality" />
+          @if (form.controls.nationality.touched && form.controls.nationality.hasError('required')) {
+            <p class="field-error">Nationality is required.</p>
+          }
+          @if (form.controls.nationality.touched && form.controls.nationality.hasError('minlength')) {
+            <p class="field-error">Nationality must be at least 2 characters.</p>
+          }
+          @if (form.controls.nationality.touched && form.controls.nationality.hasError('maxlength')) {
+            <p class="field-error">Nationality must not exceed 80 characters.</p>
+          }
+        </label>
+        <label>
+          Biography
+          <textarea rows="3" formControlName="biography"></textarea>
+          @if (form.controls.biography.touched && form.controls.biography.hasError('maxlength')) {
+            <p class="field-error">Biography must not exceed 2000 characters.</p>
+          }
+        </label>
         <div class="form-actions">
           <button type="button" class="secondary" (click)="closeFormModal()">Cancel</button>
           <button type="submit" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save author' }}</button>

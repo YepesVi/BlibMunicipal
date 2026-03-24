@@ -224,6 +224,10 @@ public class BookServiceImpl implements BookService {
     }
 
     private Specification<Book> buildSpecification(BookFilterRequest filter) {
+        Set<Long> categoryIds = filter.categoryId() != null
+                ? collectCategoryAndDescendantIds(filter.categoryId())
+                : Set.of();
+
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -238,8 +242,8 @@ public class BookServiceImpl implements BookService {
                 predicates.add(cb.equal(root.get("author").get("id"), filter.authorId()));
             }
 
-            if (filter.categoryId() != null) {
-                predicates.add(cb.equal(root.get("category").get("id"), filter.categoryId()));
+            if (!categoryIds.isEmpty()) {
+                predicates.add(root.get("category").get("id").in(categoryIds));
             }
 
             if (filter.publicationYear() != null) {
@@ -248,6 +252,40 @@ public class BookServiceImpl implements BookService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Set<Long> collectCategoryAndDescendantIds(Long categoryId) {
+        Category rootCategory = findCategory(categoryId);
+        List<Category> allCategories = categoryRepository.findAll();
+
+        Map<Long, List<Long>> childrenByParentId = new HashMap<>();
+        for (Category category : allCategories) {
+            if (category.getParent() == null) {
+                continue;
+            }
+
+            Long parentId = category.getParent().getId();
+            childrenByParentId
+                    .computeIfAbsent(parentId, ignored -> new ArrayList<>())
+                    .add(category.getId());
+        }
+
+        Set<Long> allIds = new HashSet<>();
+        Deque<Long> toVisit = new ArrayDeque<>();
+        toVisit.push(rootCategory.getId());
+
+        while (!toVisit.isEmpty()) {
+            Long currentId = toVisit.pop();
+            if (!allIds.add(currentId)) {
+                continue;
+            }
+
+            for (Long childId : childrenByParentId.getOrDefault(currentId, List.of())) {
+                toVisit.push(childId);
+            }
+        }
+
+        return allIds;
     }
 
     private Book findBook(Long id) {

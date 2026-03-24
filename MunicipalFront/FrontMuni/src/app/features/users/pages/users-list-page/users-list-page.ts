@@ -44,9 +44,9 @@ export class UsersListPage {
   readonly isAdmin = signal(this.authService.session()?.role === 'ADMIN');
 
   readonly form = this.formBuilder.nonNullable.group({
-    username: ['', [Validators.required, Validators.minLength(4)]],
-    password: ['', [Validators.minLength(8)]],
-    role: this.formBuilder.nonNullable.control<'ADMIN' | 'EMPLOYEE'>('EMPLOYEE'),
+    username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(80)]],
+    password: ['', [Validators.minLength(8), Validators.maxLength(100)]],
+    role: this.formBuilder.nonNullable.control<'ADMIN' | 'EMPLOYEE'>('EMPLOYEE', [Validators.required]),
   });
 
   constructor() {
@@ -88,12 +88,6 @@ export class UsersListPage {
       });
   }
 
-  applyUsernameFilter(value: string): void {
-    this.usernameFilter.set(value.trim());
-    this.page.set(0);
-    this.loadUsers();
-  }
-
   changePage(delta: number): void {
     const nextPage = this.page() + delta;
     if (nextPage < 0 || nextPage >= this.totalPages()) {
@@ -117,6 +111,9 @@ export class UsersListPage {
   saveUser(): void {
     if (this.form.invalid || this.saving()) {
       this.form.markAllAsTouched();
+      if (!this.saving()) {
+        this.notificationService.error('Please fix the highlighted user form fields');
+      }
       return;
     }
 
@@ -234,6 +231,14 @@ export class UsersListPage {
   }
 
   applyFilters(): void {
+    this.page.set(0);
+    this.loadUsers();
+  }
+
+  clearFilters(): void {
+    this.usernameFilter.set('');
+    this.sortBy.set('id');
+    this.sortDir.set('asc');
     this.page.set(0);
     this.loadUsers();
   }

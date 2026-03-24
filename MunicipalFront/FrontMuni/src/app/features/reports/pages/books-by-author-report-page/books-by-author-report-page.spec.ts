@@ -2,11 +2,16 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 
+import { AuthorsApiService } from '../../../catalog/authors/data-access/authors-api.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ReportsApiService } from '../../data-access/reports-api.service';
 import { BooksByAuthorReportPage } from './books-by-author-report-page';
 
 describe('BooksByAuthorReportPage', () => {
+  let authorsApiService: {
+    findAll: ReturnType<typeof vi.fn>;
+  };
+
   let reportsApiService: {
     getBooksByAuthorIdCard: ReturnType<typeof vi.fn>;
     downloadBooksByAuthorIdCardPdf: ReturnType<typeof vi.fn>;
@@ -18,6 +23,22 @@ describe('BooksByAuthorReportPage', () => {
   };
 
   beforeEach(async () => {
+    authorsApiService = {
+      findAll: vi.fn().mockReturnValue(
+        of([
+          {
+            id: 1,
+            idCard: '0102',
+            fullName: 'Author Name',
+            nationality: 'CO',
+            biography: null,
+            createdAt: '2026-03-20T10:15:30Z',
+            updatedAt: '2026-03-20T10:15:30Z',
+          },
+        ])
+      ),
+    };
+
     reportsApiService = {
       getBooksByAuthorIdCard: vi.fn(),
       downloadBooksByAuthorIdCardPdf: vi.fn(),
@@ -31,6 +52,7 @@ describe('BooksByAuthorReportPage', () => {
     await TestBed.configureTestingModule({
       imports: [BooksByAuthorReportPage],
       providers: [
+        { provide: AuthorsApiService, useValue: authorsApiService },
         { provide: ReportsApiService, useValue: reportsApiService },
         { provide: NotificationService, useValue: notificationService },
       ],
@@ -59,7 +81,7 @@ describe('BooksByAuthorReportPage', () => {
     };
 
     reportsApiService.getBooksByAuthorIdCard.mockReturnValue(of(mockReport));
-    component.form.controls.idCard.setValue(' 0102 ');
+    component.form.controls.authorId.setValue(1);
 
     component.generatePreview();
 
@@ -76,7 +98,7 @@ describe('BooksByAuthorReportPage', () => {
     reportsApiService.getBooksByAuthorIdCard.mockReturnValue(
       throwError(() => new Error('Could not load report'))
     );
-    component.form.controls.idCard.setValue('0102');
+    component.form.controls.authorId.setValue(1);
 
     component.generatePreview();
 
@@ -100,7 +122,7 @@ describe('BooksByAuthorReportPage', () => {
     reportsApiService.downloadBooksByAuthorIdCardPdf.mockReturnValue(
       of(new Blob(['test'], { type: 'application/pdf' }))
     );
-    component.form.controls.idCard.setValue(' 0102 ');
+    component.form.controls.authorId.setValue(1);
 
     component.downloadPdf();
 
