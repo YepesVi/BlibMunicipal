@@ -1,163 +1,172 @@
 # AGENTS.md
 
-Guidance for coding agents working in this repository.
+Operational guide for coding agents working in this repository.
 
-## Repository Layout
+## Repository Overview
 
-- `MunicipalBack/`: Spring Boot backend (Java 21, Maven wrapper included).
-- `MunicipalFront/FrontMuni/`: Angular frontend (Angular 21, npm).
-- This repo currently has no root-level monorepo task runner; run commands per subproject.
+- `MunicipalBack/`: Spring Boot backend (Java 21, Maven wrapper).
+- `MunicipalFront/FrontMuni/`: Angular frontend (Angular 21, npm, SSR build config).
+- No root monorepo task runner; run commands per subproject.
 
-## Rule Files
+## Project Rule Files
 
-- Cursor rules: none found (`.cursorrules` and `.cursor/rules/` not present).
-- Copilot rules: none found (`.github/copilot-instructions.md` not present).
-- If these files are added later, follow them as higher-priority project rules.
+- Cursor rules: not found (`.cursorrules` and `.cursor/rules/` are absent).
+- Copilot rules: not found (`.github/copilot-instructions.md` is absent).
+- If these files appear later, treat them as higher-priority project instructions.
 
 ## Environment and Secrets
 
-- Backend reads DB/JWT/Cloudinary settings from env vars (see `MunicipalBack/src/main/resources/application.properties`).
-- Backend bootstraps `.env` values in `MunicipalBack/src/main/java/com/Biblioteca/MunicipalBack/MunicipalBackApplication.java`.
-- Never hardcode secrets in source files or tests.
-- Do not commit `.env` or credential files.
+- Backend expects DB/JWT/Cloudinary values from environment variables.
+- `.env` is used locally by backend bootstrap; never commit secrets.
+- Do not hardcode tokens, credentials, or connection strings.
 
-## Backend (Spring Boot / Maven)
+## Backend Guide (Spring Boot)
 
-Run from `MunicipalBack/`.
+Run all backend commands from `MunicipalBack/`.
 
-### Build / Run / Test Commands
+### Build / Run / Test
 
-- Install/resolve and compile:
-  - Unix: `./mvnw clean compile`
-  - Windows: `mvnw.cmd clean compile`
-- Run app locally:
-  - Unix: `./mvnw spring-boot:run`
-  - Windows: `mvnw.cmd spring-boot:run`
-- Full package:
-  - Unix: `./mvnw clean package`
-  - Windows: `mvnw.cmd clean package`
+- Compile:
+  - `./mvnw clean compile`
+- Run app:
+  - `./mvnw spring-boot:run`
+- Package jar:
+  - `./mvnw clean package`
 - Run all tests:
-  - Unix: `./mvnw test`
-  - Windows: `mvnw.cmd test`
-- Run a single test class:
-  - Unix: `./mvnw -Dtest=MunicipalBackApplicationTests test`
-  - Windows: `mvnw.cmd -Dtest=MunicipalBackApplicationTests test`
-- Run a single test method:
-  - Unix: `./mvnw -Dtest=MunicipalBackApplicationTests#contextLoads test`
-  - Windows: `mvnw.cmd -Dtest=MunicipalBackApplicationTests#contextLoads test`
-- Verify lifecycle (includes tests):
-  - Unix: `./mvnw clean verify`
-  - Windows: `mvnw.cmd clean verify`
+  - `./mvnw test`
+- Run specific test class:
+  - `./mvnw -Dtest=ReportServiceImplTest test`
+- Run specific test method:
+  - `./mvnw -Dtest=ReportServiceImplTest#getBooksByAuthorIdCardPdfReturnsPdfBytes test`
+- Run several classes:
+  - `./mvnw -Dtest=ReportControllerTest,ReportControllerSecurityTest test`
+- Verify lifecycle:
+  - `./mvnw clean verify`
 
-### Lint / Formatting Status
+Windows note: `./mvnw` works in Git Bash; `mvnw.cmd` works in cmd/PowerShell.
 
-- No dedicated Java lint/format plugin is configured in `pom.xml` (no Checkstyle/Spotless/PMD found).
-- Treat `mvn test` (or `mvn verify`) as the minimum quality gate.
-- Keep formatting consistent with existing code (4-space indentation, readable wrapping).
+### Lint / Formatting
+
+- No dedicated lint plugin is configured (no Checkstyle/Spotless/PMD in `pom.xml`).
+- Minimum quality gate: `./mvnw test` (or `./mvnw verify`).
+- Keep formatting consistent with current code style (4-space indentation, readable line wrapping).
 
 ### Backend Code Style
 
 - **Architecture**
-  - Keep domain modules under feature packages (`auth`, `catalog`, `media`, `users`, `shared`).
-  - Typical layering: `controller` -> `service` -> `repository` -> `model`.
+  - Keep feature packages (`auth`, `catalog`, `media`, `reports`, `users`, `shared`).
+  - Respect layering: `controller -> service -> repository -> model`.
 - **Dependency Injection**
-  - Prefer constructor injection via Lombok `@RequiredArgsConstructor`.
-  - Keep injected fields `private final`.
-- **DTOs**
-  - Use Java `record` for request/response DTOs where possible.
-  - Put validation annotations on request DTO fields.
-- **Validation**
-  - Use `@Valid` in controllers for request bodies.
-  - Use Jakarta validation annotations (`@NotBlank`, `@Size`, `@Min`, etc.).
+  - Prefer constructor injection with Lombok `@RequiredArgsConstructor`.
+  - Keep dependencies as `private final`.
+- **DTOs and Validation**
+  - Use request/response DTOs (`record` when practical).
+  - Put Jakarta validation constraints in DTOs.
+  - Use `@Valid` in controller request bodies.
 - **Transactions**
-  - Class-level `@Transactional(readOnly = true)` in services; mark mutating methods with `@Transactional`.
+  - Use `@Transactional(readOnly = true)` for query-focused services.
+  - Mark write operations with explicit `@Transactional`.
 - **Error Handling**
   - Throw domain exceptions (`ResourceNotFoundException`, `ConflictException`, etc.).
-  - Let `GlobalExceptionHandler` produce `ApiErrorResponse`; avoid ad-hoc controller try/catch.
-- **Normalization**
-  - Trim inbound strings in services before persistence.
-  - Convert optional blank fields to `null` when that is existing behavior.
+  - Let global exception handling map to API responses; avoid ad-hoc try/catch in controllers.
+- **Persistence**
+  - Keep JPA entities mutable and consistent with existing annotations.
+  - Avoid eager fetches unless required for correctness.
 - **Naming**
   - Classes/interfaces: PascalCase.
-  - Methods/fields/locals: camelCase.
+  - Methods/fields/local vars: camelCase.
   - Constants: UPPER_SNAKE_CASE.
-  - Packages: keep existing package structure conventions in this repo.
-- **Persistence**
-  - Entities are mutable classes with JPA annotations and Lombok getters/setters.
-  - Keep table/column naming explicit where existing code does so.
 - **Imports**
-  - Prefer explicit imports over wildcard imports in new/edited code.
+  - Prefer explicit imports, avoid wildcard imports.
   - Remove unused imports.
 - **REST Conventions**
-  - Use plural resource paths and HTTP verbs consistently.
-  - Use `@ResponseStatus` for non-default status codes.
-  - Keep paginated endpoints returning `PageResponse<T>` when applicable.
+  - Keep plural resource paths and status codes consistent.
+  - Use `PageResponse<T>` for paginated endpoints.
 
-## Frontend (Angular)
+## Frontend Guide (Angular)
 
-Run from `MunicipalFront/FrontMuni/`.
+Run all frontend commands from `MunicipalFront/FrontMuni/`.
 
-### Build / Run / Test Commands
+### Build / Run / Test
 
-- Install dependencies: `npm install`
-- Dev server: `npm run start`
-- Production build: `npm run build`
-- Dev build watch: `npm run watch`
-- Run all unit tests: `npm run test`
-- Run a single spec file (Angular test builder forwards include pattern):
-  - `npm run test -- --include src/app/services/usuario.spec.ts`
-- Optional single test name filtering (if supported in local builder/version):
-  - `npm run test -- --testNamePattern="should be created"`
+- Install dependencies:
+  - `npm install`
+- Start dev server:
+  - `npm run start`
+- Production build:
+  - `npm run build`
+- Watch build:
+  - `npm run watch`
+- Run all tests:
+  - `npm run test -- --watch=false`
+- Run one spec file:
+  - `npm run test -- --watch=false --include src/app/features/reports/data-access/reports-api.service.spec.ts`
+- Run multiple spec files:
+  - `npm run test -- --watch=false --include src/app/path/a.spec.ts --include src/app/path/b.spec.ts`
+- Optional test name filtering (runner-dependent):
+  - `npm run test -- --watch=false --testNamePattern="should load data"`
 
-### Lint / Formatting Status
+### Lint / Formatting
 
-- No `lint` script is defined in `package.json`.
-- No ESLint config is present.
-- Prettier is configured via `.prettierrc`; use it as the formatter source of truth.
-- Suggested formatting check:
+- No `lint` script is currently defined in `package.json`.
+- Prettier is available (`prettier` dependency, `.prettierrc`).
+- Suggested checks:
   - `npx prettier --check "src/**/*.{ts,html,scss}"`
+  - `npx prettier --write "src/**/*.{ts,html,scss}"`
 
 ### Frontend Code Style
 
-- **TypeScript Strictness**
-  - Project uses strict TS (`strict: true`, `noImplicitReturns`, etc. in `tsconfig.json`).
-  - Avoid `any`; prefer precise interfaces/types/models.
-- **Angular Style**
-  - Standalone components are used (`imports` in `@Component` metadata).
-  - Keep component/service/interceptor tests in `*.spec.ts`.
+- **Type Safety**
+  - Respect strict TypeScript settings.
+  - Avoid `any`; use explicit interfaces/types.
+- **Project Structure**
+  - Keep feature logic under `src/app/features/**`.
+  - Keep cross-cutting core code in `src/app/core/**`.
+  - Keep shared reusable utilities/UI in `src/app/shared/**`.
+- **Angular Patterns**
+  - Use standalone components and explicit `imports` arrays.
+  - Keep data access in `data-access/*api.service.ts`.
+  - Prefer signal-based state already used in pages where applicable.
+- **Forms**
+  - Use reactive forms for data entry flows.
+  - Keep validators aligned with backend constraints.
+  - Show field-level validation messages only when touched/invalid.
+- **HTTP and Auth**
+  - Centralize auth header behavior in `auth-interceptor`.
+  - Centralize API error mapping in `http-error-interceptor`.
+  - Avoid duplicating token refresh logic in page components.
+- **UX Feedback**
+  - Show success/error notifications after create/update/delete/report/login actions.
+  - Keep user-facing error messages actionable and concise.
+- **Styling**
+  - Reuse theme variables in `styles.scss` and feature styles.
+  - Prefer responsive layouts with simple breakpoints over hardcoded pixel-only layouts.
 - **Naming**
-  - Classes/types/interfaces: PascalCase.
+  - Types/classes/components: PascalCase.
   - Variables/functions/properties: camelCase.
-  - File and folder names: kebab-case (existing convention).
-- **Formatting**
-  - 2-space indentation (`.editorconfig`).
-  - Single quotes in TS (`.prettierrc` and `.editorconfig`).
-  - Keep line width near Prettier `printWidth: 100`.
+  - Files/folders: kebab-case.
 - **Imports**
-  - Group imports by source; remove unused imports.
-  - Prefer explicit named imports.
-- **Error Handling**
-  - Centralize HTTP error handling in interceptors when possible.
-  - Avoid swallowing errors; return typed fallbacks or rethrow appropriately.
-- **Scoping**
-  - Keep feature code in module/feature folders under `src/app/modules`.
-  - Keep shared logic in `src/app/services`, models in `src/app/models`, interceptors in `src/app/core/interceptors`.
+  - Group imports by source and remove unused imports.
+  - Prefer named imports over namespace imports.
 
-## Agent Workflow Expectations
+## Testing Expectations
 
-- Prefer minimal, focused diffs over broad refactors.
-- Preserve public API behavior unless task explicitly requires API changes.
-- Add/adjust tests when behavior changes.
-- Before finishing:
-  - Backend changes: run relevant Maven tests (at least targeted tests).
-  - Frontend changes: run relevant Angular tests (at least targeted specs).
-- If a requested command is unavailable (e.g., missing node_modules), report clearly and provide exact next command to unblock.
+- Add or update tests whenever behavior changes.
+- Backend changes: run at least affected Maven tests.
+- Frontend changes: run affected specs and a production build.
+- If a command cannot run locally, report the blocker and exact command needed to unblock.
 
-## Quick Command Reference
+## Git and Change Hygiene
+
+- Keep diffs focused; avoid unrelated refactors.
+- Do not revert user-authored unrelated changes.
+- Never commit secrets or environment files.
+- Runtime logs (`.opencode-*.log`) should remain ignored.
+
+## Quick Reference
 
 - Backend run: `./mvnw spring-boot:run`
-- Backend all tests: `./mvnw test`
-- Backend single test method: `./mvnw -Dtest=ClassName#method test`
-- Frontend dev: `npm run start`
-- Frontend all tests: `npm run test`
-- Frontend single spec: `npm run test -- --include src/path/to/file.spec.ts`
+- Backend single test: `./mvnw -Dtest=ClassName#method test`
+- Frontend run: `npm run start`
+- Frontend single spec: `npm run test -- --watch=false --include src/path/to/file.spec.ts`
+- Frontend build: `npm run build`
