@@ -87,3 +87,11 @@ Thumbs.db
 
 **/.editorconfig
 **/.prettierrc
+
+node_modules/
+.env
+skills-lock.json
+package-lock.json
+package.json
+CLAUDE.md
+
