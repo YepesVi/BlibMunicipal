@@ -10,11 +10,11 @@ import { AuthService } from '../../../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
 import { NotificationService } from '../../../../../shared/services/notification.service';
 import { MediaApiService } from '../../../../media/data-access/media-api.service';
-import { AuthorsApiService } from '../../../authors/data-access/authors-api.service';
+import { AuthorsGraphqlService } from '../../../authors/data-access/authors-graphql.service';
 import { AuthorResponse } from '../../../authors/data-access/authors.dto';
-import { CategoriesApiService } from '../../../categories/data-access/categories-api.service';
+import { CategoriesGraphqlService } from '../../../categories/data-access/categories-graphql.service';
 import { CategoryResponse } from '../../../categories/data-access/categories.dto';
-import { BooksApiService } from '../../data-access/books-api.service';
+import { BooksGraphqlService } from '../../data-access/books-graphql.service';
 import {
   BookImageResponse,
   BookSummaryResponse,
@@ -39,9 +39,9 @@ interface CategoryTreeNode {
   styleUrl: './books-list-page.scss',
 })
 export class BooksListPage {
-  private readonly booksApiService = inject(BooksApiService);
-  private readonly authorsApiService = inject(AuthorsApiService);
-  private readonly categoriesApiService = inject(CategoriesApiService);
+  private readonly booksApiService = inject(BooksGraphqlService);
+  private readonly authorsApiService = inject(AuthorsGraphqlService);
+  private readonly categoriesApiService = inject(CategoriesGraphqlService);
   private readonly mediaApiService = inject(MediaApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);

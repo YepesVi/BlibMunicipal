@@ -9,7 +9,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CreateUserRequest, UserResponse } from '../../data-access/users.dto';
-import { UsersApiService } from '../../data-access/users-api.service';
+import { UsersGraphqlService } from '../../data-access/users-graphql.service';
 
 @Component({
   selector: 'app-users-list-page',
@@ -19,7 +19,7 @@ import { UsersApiService } from '../../data-access/users-api.service';
   styleUrl: './users-list-page.scss',
 })
 export class UsersListPage {
-  private readonly usersApiService = inject(UsersApiService);
+  private readonly usersApiService = inject(UsersGraphqlService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);

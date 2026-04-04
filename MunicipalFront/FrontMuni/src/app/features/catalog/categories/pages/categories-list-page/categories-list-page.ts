@@ -7,7 +7,7 @@ import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
 import { NotificationService } from '../../../../../shared/services/notification.service';
-import { CategoriesApiService } from '../../data-access/categories-api.service';
+import { CategoriesGraphqlService } from '../../data-access/categories-graphql.service';
 import { CategoryResponse } from '../../data-access/categories.dto';
 
 interface CategoryTreeNode {
@@ -24,7 +24,7 @@ interface CategoryTreeNode {
   styleUrl: './categories-list-page.scss',
 })
 export class CategoriesListPage {
-  private readonly categoriesApiService = inject(CategoriesApiService);
+  private readonly categoriesApiService = inject(CategoriesGraphqlService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);

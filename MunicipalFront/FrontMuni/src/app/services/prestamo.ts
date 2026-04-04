@@ -16,7 +16,7 @@ interface Prestamo {
   providedIn: 'root'
 })
 export class PrestamoService {
-  private apiUrl = `${environment.apiUrl}/prestamos`;
+  private apiUrl = `${environment.apiBaseUrl}/prestamos`;
 
   constructor(private http: HttpClient) { }
 

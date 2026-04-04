@@ -8,7 +8,7 @@ import { AuthService } from '../../../../../core/auth/auth.service';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
 import { NotificationService } from '../../../../../shared/services/notification.service';
 import { AuthorResponse } from '../../data-access/authors.dto';
-import { AuthorsApiService } from '../../data-access/authors-api.service';
+import { AuthorsGraphqlService } from '../../data-access/authors-graphql.service';
 
 @Component({
   selector: 'app-authors-list-page',
@@ -18,7 +18,7 @@ import { AuthorsApiService } from '../../data-access/authors-api.service';
   styleUrl: './authors-list-page.scss',
 })
 export class AuthorsListPage {
-  private readonly authorsApiService = inject(AuthorsApiService);
+  private readonly authorsApiService = inject(AuthorsGraphqlService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);

@@ -2,18 +2,22 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 
-import { AuthorsApiService } from '../../../catalog/authors/data-access/authors-api.service';
+import { AuthorsGraphqlService } from '../../../catalog/authors/data-access/authors-graphql.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ReportsApiService } from '../../data-access/reports-api.service';
+import { ReportsGraphqlService } from '../../data-access/reports-graphql.service';
 import { BooksByAuthorReportPage } from './books-by-author-report-page';
 
 describe('BooksByAuthorReportPage', () => {
-  let authorsApiService: {
+  let authorsGraphqlService: {
     findAll: ReturnType<typeof vi.fn>;
   };
 
-  let reportsApiService: {
+  let reportsGraphqlService: {
     getBooksByAuthorIdCard: ReturnType<typeof vi.fn>;
+  };
+
+  let reportsApiService: {
     downloadBooksByAuthorIdCardPdf: ReturnType<typeof vi.fn>;
   };
 
@@ -23,7 +27,7 @@ describe('BooksByAuthorReportPage', () => {
   };
 
   beforeEach(async () => {
-    authorsApiService = {
+    authorsGraphqlService = {
       findAll: vi.fn().mockReturnValue(
         of([
           {
@@ -39,8 +43,11 @@ describe('BooksByAuthorReportPage', () => {
       ),
     };
 
-    reportsApiService = {
+    reportsGraphqlService = {
       getBooksByAuthorIdCard: vi.fn(),
+    };
+
+    reportsApiService = {
       downloadBooksByAuthorIdCardPdf: vi.fn(),
     };
 
@@ -52,7 +59,8 @@ describe('BooksByAuthorReportPage', () => {
     await TestBed.configureTestingModule({
       imports: [BooksByAuthorReportPage],
       providers: [
-        { provide: AuthorsApiService, useValue: authorsApiService },
+        { provide: AuthorsGraphqlService, useValue: authorsGraphqlService },
+        { provide: ReportsGraphqlService, useValue: reportsGraphqlService },
         { provide: ReportsApiService, useValue: reportsApiService },
         { provide: NotificationService, useValue: notificationService },
       ],
@@ -80,12 +88,12 @@ describe('BooksByAuthorReportPage', () => {
       ],
     };
 
-    reportsApiService.getBooksByAuthorIdCard.mockReturnValue(of(mockReport));
+    reportsGraphqlService.getBooksByAuthorIdCard.mockReturnValue(of(mockReport));
     component.form.controls.authorId.setValue(1);
 
     component.generatePreview();
 
-    expect(reportsApiService.getBooksByAuthorIdCard).toHaveBeenCalledWith('0102');
+    expect(reportsGraphqlService.getBooksByAuthorIdCard).toHaveBeenCalledWith('0102');
     expect(component.report()?.authorName).toBe('Author Name');
     expect(component.errorMessage()).toBeNull();
     expect(notificationService.success).toHaveBeenCalledWith('Report preview generated');
@@ -95,7 +103,7 @@ describe('BooksByAuthorReportPage', () => {
     const fixture = TestBed.createComponent(BooksByAuthorReportPage);
     const component = fixture.componentInstance;
 
-    reportsApiService.getBooksByAuthorIdCard.mockReturnValue(
+    reportsGraphqlService.getBooksByAuthorIdCard.mockReturnValue(
       throwError(() => new Error('Could not load report'))
     );
     component.form.controls.authorId.setValue(1);
@@ -138,3 +146,4 @@ describe('BooksByAuthorReportPage', () => {
     createElementSpy.mockRestore();
   });
 });
+

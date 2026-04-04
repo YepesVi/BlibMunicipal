@@ -1,0 +1,289 @@
+scalar Long
+scalar DateTime
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+}
+
+# ── Paginación (espejo exacto de PageResponse<T>) ─────────────────────────────
+type BookSummaryPage {
+  content: [BookSummary!]!
+  page: Int!
+  size: Int!
+  totalElements: Long!
+  totalPages: Int!
+  first: Boolean!
+  last: Boolean!
+  sortBy: String!
+  sortDirection: String!
+}
+
+type UserPage {
+  content: [User!]!
+  page: Int!
+  size: Int!
+  totalElements: Long!
+  totalPages: Int!
+  first: Boolean!
+  last: Boolean!
+  sortBy: String!
+  sortDirection: String!
+}
+
+# ── Tipos de dominio ──────────────────────────────────────────────────────────
+type Author {
+  id: Long!
+  idCard: String!
+  fullName: String!
+  nationality: String!
+  biography: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Category {
+  id: Long!
+  name: String!
+  description: String
+  parentId: Long
+  parentName: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type CategoryTree {
+  id: Long!
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  children: [CategoryTree!]!
+}
+
+type BookImage {
+  id: Long!
+  mediaAssetId: Long!
+  secureUrl: String!
+  primaryImage: Boolean!
+  sortOrder: Int!
+  altText: String
+}
+
+type Book {
+  id: Long!
+  isbn: String!
+  title: String!
+  publisher: String!
+  publicationYear: Int!
+  description: String
+  authorId: Long!
+  authorName: String!
+  categoryId: Long!
+  categoryName: String!
+  primaryImageUrl: String
+  images: [BookImage!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type BookSummary {
+  id: Long!
+  isbn: String!
+  title: String!
+  publisher: String!
+  publicationYear: Int!
+  authorId: Long!
+  authorName: String!
+  categoryId: Long!
+  categoryName: String!
+  primaryImageUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type User {
+  id: Long!
+  username: String!
+  role: UserRole!
+}
+
+type MediaAsset {
+  id: Long!
+  publicId: String!
+  secureUrl: String!
+  resourceType: String!
+  format: String
+  originalFilename: String
+  contentType: String
+  sizeInBytes: Long
+  width: Int
+  height: Int
+  createdAt: DateTime!
+}
+
+type BooksByAuthorReportItem {
+  bookId: Long!
+  isbn: String!
+  title: String!
+  publisher: String!
+  publicationYear: Int!
+  categoryName: String!
+  primaryImageUrl: String
+}
+
+type BooksByAuthorReport {
+  authorIdCard: String!
+  authorName: String!
+  generatedAt: DateTime!
+  totalBooks: Int!
+  books: [BooksByAuthorReportItem!]!
+}
+
+# ── Inputs ────────────────────────────────────────────────────────────────────
+input BookFilterInput {
+  title: String
+  authorId: Long
+  categoryId: Long
+  publicationYear: Int
+  page: Int = 0
+  size: Int = 10
+  sortBy: String = "title"
+  sortDir: String = "asc"
+}
+
+input CreateBookInput {
+  isbn: String!
+  title: String!
+  publisher: String!
+  publicationYear: Int!
+  description: String
+  authorId: Long!
+  categoryId: Long!
+}
+
+input UpdateBookInput {
+  isbn: String!
+  title: String!
+  publisher: String!
+  publicationYear: Int!
+  description: String
+  authorId: Long!
+  categoryId: Long!
+}
+
+input BookImageAttachItemInput {
+  mediaAssetId: Long!
+  primaryImage: Boolean
+  altText: String
+}
+
+input AttachImagesInput {
+  images: [BookImageAttachItemInput!]!
+}
+
+input ReorderImageItemInput {
+  bookImageId: Long!
+  sortOrder: Int!
+}
+
+input ReorderImagesInput {
+  items: [ReorderImageItemInput!]!
+}
+
+input CreateAuthorInput {
+  idCard: String!
+  fullName: String!
+  nationality: String!
+  biography: String
+}
+
+input UpdateAuthorInput {
+  idCard: String!
+  fullName: String!
+  nationality: String!
+  biography: String
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+  parentId: Long
+}
+
+input UpdateCategoryInput {
+  name: String!
+  description: String
+  parentId: Long
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+  role: UserRole!
+}
+
+input UpdateUserInput {
+  username: String!
+  password: String
+  role: UserRole!
+}
+
+input UserFilterInput {
+  username: String
+  role: UserRole
+  page: Int = 0
+  size: Int = 10
+  sortBy: String = "username"
+  sortDir: String = "asc"
+}
+
+# ── Queries ───────────────────────────────────────────────────────────────────
+type Query {
+  books(filter: BookFilterInput): BookSummaryPage!
+  book(id: Long!): Book!
+  bookByIsbn(isbn: String!): Book!
+
+  authors(fullName: String): [Author!]!
+  author(id: Long!): Author!
+  authorByIdCard(idCard: String!): Author!
+
+  categories: [Category!]!
+  categoryRoots: [Category!]!
+  categoryChildren(parentId: Long!): [Category!]!
+  category(id: Long!): Category!
+  categoryTree(id: Long!): CategoryTree!
+
+  users(filter: UserFilterInput): UserPage!
+  user(id: Long!): User!
+
+  mediaAssets: [MediaAsset!]!
+  mediaAsset(id: Long!): MediaAsset!
+
+  booksByAuthorReport(authorIdCard: String!): BooksByAuthorReport!
+}
+
+# ── Mutations ─────────────────────────────────────────────────────────────────
+type Mutation {
+  createBook(input: CreateBookInput!): Book!
+  updateBook(id: Long!, input: UpdateBookInput!): Book!
+  deleteBook(id: Long!): Boolean!
+  attachBookImages(bookId: Long!, input: AttachImagesInput!): Book!
+  setPrimaryBookImage(bookId: Long!, bookImageId: Long!): Book!
+  reorderBookImages(bookId: Long!, input: ReorderImagesInput!): Book!
+  removeBookImage(bookId: Long!, bookImageId: Long!): Boolean!
+
+  createAuthor(input: CreateAuthorInput!): Author!
+  updateAuthor(id: Long!, input: UpdateAuthorInput!): Author!
+  deleteAuthor(id: Long!): Boolean!
+
+  createCategory(input: CreateCategoryInput!): Category!
+  updateCategory(id: Long!, input: UpdateCategoryInput!): Category!
+  deleteCategory(id: Long!): Boolean!
+
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: Long!, input: UpdateUserInput!): User!
+  deleteUser(id: Long!): Boolean!
+
+  deleteMediaAsset(id: Long!): Boolean!
+}

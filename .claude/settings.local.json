@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw dependency:tree -Dincludes=com.graphql-java:graphql-java -q)",
+      "Bash(./mvnw dependency:tree -Dincludes=com.graphql-java)",
+      "Bash(./mvnw clean:*)",
+      "Bash(./mvnw test:*)",
+      "Bash(./mvnw.cmd clean:*)",
+      "Bash(./mvnw.cmd dependency:tree -q)",
+      "Bash(./mvnw.cmd dependency:tree)",
+      "Bash(jar tf:*)",
+      "Bash(./mvnw.cmd dependency:resolve -Dartifact=org.springframework.graphql:spring-graphql-test:2.0.2 -q)",
+      "Bash(xargs -I{} sh -c 'jar tf \"{}\" 2>/dev/null | grep -l \"GraphQlTest\" && echo \"FOUND IN: {}\"')",
+      "Bash(./mvnw.cmd dependency:resolve -q)",
+      "Bash(./mvnw.cmd dependency:resolve -Dartifact=org.springframework.boot:spring-boot-graphql-test:4.0.3 -q)",
+      "Bash(./mvnw.cmd test:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm view:*)",
+      "Bash(node -e \"const m = require\\('apollo-angular'\\); console.log\\(Object.keys\\(m\\).filter\\(k => k.includes\\('provide'\\) || k.includes\\('Apollo'\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}

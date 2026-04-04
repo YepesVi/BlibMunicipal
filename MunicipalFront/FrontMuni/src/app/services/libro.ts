@@ -9,7 +9,7 @@ import { PageResponse } from '../models/page-response';
   providedIn: 'root'
 })
 export class LibroService {
-  private apiUrl = `${environment.apiUrl}/catalog/books`;
+  private apiUrl = `${environment.apiBaseUrl}/catalog/books`;
 
   constructor(private http: HttpClient) { }
 
