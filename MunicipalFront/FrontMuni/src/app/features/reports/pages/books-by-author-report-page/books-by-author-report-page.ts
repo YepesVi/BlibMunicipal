@@ -4,10 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
-import { AuthorsApiService } from '../../../catalog/authors/data-access/authors-api.service';
+import { AuthorsGraphqlService } from '../../../catalog/authors/data-access/authors-graphql.service';
 import { AuthorResponse } from '../../../catalog/authors/data-access/authors.dto';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ReportsApiService } from '../../data-access/reports-api.service';
+import { ReportsGraphqlService } from '../../data-access/reports-graphql.service';
 import { BooksByAuthorReportResponse } from '../../data-access/reports.dto';
 
 @Component({
@@ -19,8 +20,9 @@ import { BooksByAuthorReportResponse } from '../../data-access/reports.dto';
 })
 export class BooksByAuthorReportPage {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly reportsGraphqlService = inject(ReportsGraphqlService);
   private readonly reportsApiService = inject(ReportsApiService);
-  private readonly authorsApiService = inject(AuthorsApiService);
+  private readonly authorsApiService = inject(AuthorsGraphqlService);
   private readonly notificationService = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -57,7 +59,7 @@ export class BooksByAuthorReportPage {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    this.reportsApiService
+    this.reportsGraphqlService
       .getBooksByAuthorIdCard(idCard)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({

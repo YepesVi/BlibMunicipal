@@ -9,7 +9,7 @@ import { PageResponse } from '../models/page-response';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  private apiUrl = `${environment.apiBaseUrl}/usuarios`;
 
   constructor(private http: HttpClient) { }
 
