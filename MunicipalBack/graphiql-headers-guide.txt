@@ -1,0 +1,312 @@
+# Municipal Library - Headers para GraphiQL
+# Endpoint: http://localhost:8080/graphql
+# Usuario: admin (ROL: ADMIN)
+# Token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInVpZCI6MiwiaWF0IjoxNzc1NDk2OTA1LCJleHAiOjE3NzU0OTc4MDV9.hdKNSlEOefNhOPKuGmEjMWp9TR117-wKel4wPPMo8Qc
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# CONFIGURACIÓN EN GRAPHIQL
+# ────────────────────────────────────────────────────────────────────────────
+
+# Paso 1: Configurar Headers
+#   - Ve a "Headers" en GraphiQL
+#   - Configura los siguientes headers:
+
+Request Headers:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Content-Type: application/json
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInVpZCI6MiwiaWF0IjoxNzc1NDk2OTA1LCJleHAiOjE3NzU0OTc4MDV9.hdKNSlEOefNhOPKuGmEjMWp9TR117-wKel4wPPMo8Qc
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# ────────────────────────────────────────────────────────────────────────────
+# EJEMPLO DE QUERIES
+# ────────────────────────────────────────────────────────────────────────────
+
+
+# Query 1: Obtener todos los libros (PUBLICO)
+# Nota: Este query NO requiere token
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "title"
+    sortDir: "asc"
+  }) {
+    content {
+      id
+      isbn
+      title
+      publisher
+      authorName
+      categoryName
+      primaryImageUrl
+    }
+    page
+    size
+    totalElements
+    totalPages
+  }
+}
+
+
+# Query 2: Obtener libros con AUTH (REQUIERE TOKEN)
+# Este query SÍ requiere el token configurado arriba
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "title"
+    sortDir: "asc"
+  }) {
+    content {
+      id
+      isbn
+      title
+      publisher
+      authorName
+      categoryName
+      primaryImageUrl
+    }
+    page
+    size
+    totalElements
+    totalPages
+  }
+}
+
+
+# Query 3: Obtener detalle de un libro (REQUIERE TOKEN)
+query {
+  book(id: 1) {
+    id
+    isbn
+    title
+    publisher
+    publicationYear
+    description
+    authorId
+    authorName
+    categoryId
+    categoryName
+    primaryImageUrl
+    images {
+      id
+      mediaAssetId
+      secureUrl
+      primaryImage
+      sortOrder
+      altText
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+
+# Query 4: Crear un nuevo libro (REQUIERE TOKEN + ROL ADMIN/EMPLOYEE)
+mutation {
+  createBook(input: {
+    isbn: "978-0-06-112008-4"
+    title: "Harry Potter and the Sorcerer's Stone"
+    publisher: "Scholastic"
+    publicationYear: 1997
+    description: "Harry Potter discovers his magical heritage and attends Hogwarts School of Witchcraft and Wizardry."
+    authorId: 1
+    categoryId: 1
+  }) {
+    id
+    isbn
+    title
+    publisher
+    publicationYear
+    authorName
+    categoryName
+    primaryImageUrl
+  }
+}
+
+
+# Query 5: Obtener todos los autores (PUBLICO)
+# Nota: Este query NO requiere token
+query {
+  authors {
+    id
+    idCard
+    fullName
+    nationality
+    biography
+    createdAt
+    updatedAt
+  }
+}
+
+
+# Query 6: Obtener todos los usuarios (REQUIERE TOKEN + ROL ADMIN)
+# Nota: Solo ADMIN puede ver usuarios
+query {
+  users(filter: {
+    page: 0
+    size: 10
+    sortBy: "username"
+  }) {
+    content {
+      id
+      username
+      role
+    }
+    page
+    size
+    totalElements
+  }
+}
+
+
+# Query 7: Obtener categorías (PUBLICO)
+# Nota: Este query NO requiere token
+query {
+  categories {
+    id
+    name
+    description
+    parentId
+    createdAt
+    updatedAt
+  }
+}
+
+
+# Query 8: Obtener reporte de libros por autor (PUBLICO)
+query {
+  booksByAuthorReport(authorIdCard: "12345678") {
+    authorIdCard
+    authorName
+    generatedAt
+    totalBooks
+    books {
+      bookId
+      isbn
+      title
+      publisher
+      publicationYear
+      categoryName
+      primaryImageUrl
+    }
+  }
+}
+
+
+# Query 9: Buscar libros por título (PUBLICO)
+query {
+  books(filter: {
+    title: "Harry"
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      title
+      authorName
+    }
+    totalElements
+  }
+}
+
+
+# Query 10: Obtener todos los libros (CON TOKEN)
+# Nota: Este query REQUIERE token configurado en headers
+query {
+  books(filter: {
+    page: 0
+    size: 20
+    sortBy: "publicationYear"
+    sortDir: "desc"
+  }) {
+    content {
+      id
+      isbn
+      title
+      publisher
+      publicationYear
+      authorName
+      categoryName
+      primaryImageUrl
+      createdAt
+    }
+    page
+    size
+    totalElements
+    totalPages
+    first
+    last
+    sortBy
+    sortDirection
+  }
+}
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# RESUMEN DE HEADERS PARA GRAPHIQL
+# ────────────────────────────────────────────────────────────────────────────
+
+# Headers que debes configurar en GraphiQL:
+
+1. Content-Type: application/json
+
+2. Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInVpZCI6MiwiaWF0IjoxNzc1NDk2OTA1LCJleHAiOjE3NzU0OTc4MDV9.hdKNSlEOefNhOPKuGmEjMWp9TR117-wKel4wPPMo8Qc
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# IMPORTANTE
+# ────────────────────────────────────────────────────────────────────────────
+
+# 1. El token expira en 90 segundos (aprox 1.5 minutos)
+#    Si recibes error 401, obtén un nuevo token haciendo login
+
+# 2. Usa el token para todos los queries/mutations que requieren autenticación:
+#    - books (cuando no es público)
+#    - book
+#    - createBook
+#    - updateBook
+#    - deleteBook
+#    - attachBookImages
+#    - setPrimaryBookImage
+#    - reorderBookImages
+#    - removeBookImage
+#    - createAuthor
+#    - updateAuthor
+#    - deleteAuthor
+#    - createCategory
+#    - updateCategory
+#    - deleteCategory
+#    - createUser
+#    - updateUser
+#    - deleteUser
+
+# 3. Queries que NO requieren token:
+#    - books (todos) - PÚBLICO
+#    - book (todos) - PÚBLICO
+#    - bookByIsbn - PÚBLICO
+#    - authors - PÚBLICO
+#    - author - PÚBLICO
+#    - authorByIdCard - PÚBLICO
+#    - categories - PÚBLICO
+#    - categoryRoots - PÚBLICO
+#    - categoryChildren - PÚBLICO
+#    - category - PÚBLICO
+#    - categoryTree - PÚBLICO
+#    - mediaAssets - PÚBLICO
+#    - mediaAsset - PÚBLICO
+#    - booksByAuthorReport - PÚBLICO
+#    - searchBooks - PÚBLICO
+
+# 4. Para queries públicos, puedes omitir el header Authorization
+#    O dejarlo vacío
+
+# 5. Para queries con auth, el header Authorization debe estar presente
+#    con el formato exacto: Bearer <token>
+
+# ────────────────────────────────────────────────────────────────────────────
+# END OF FILE
+# ────────────────────────────────────────────────────────────────────────────

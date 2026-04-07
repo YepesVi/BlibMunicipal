@@ -1,0 +1,952 @@
+# Municipal Library - GraphQL Queries and Mutations
+# Archivo para pruebas con GraphiQL o GraphQL Playground
+# Endpoint: http://localhost:8080/graphql
+
+# ────────────────────────────────────────────────────────────────────────────
+# 1. INTRODUCCIÓN Y INTROSPECCIÓN
+# ────────────────────────────────────────────────────────────────────────────
+
+# Ver tipos disponibles
+query {
+  __schema {
+    queryType { name }
+    mutationType { name }
+    subscriptionType { name }
+    types {
+      name
+      kind
+      description
+    }
+  }
+}
+
+# Obtener tipos específicos
+query {
+  __type(name: "Book") {
+    name
+    kind
+    description
+    fields {
+      name
+      description
+      args {
+        name
+        type { name }
+        defaultValue
+      }
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 2. QUERIES: BOOKS (LIBROS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 2.1 Obtener todos los libros (paginado)
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "title"
+    sortDir: "asc"
+  }) {
+    content {
+      id
+      isbn
+      title
+      publisher
+      publicationYear
+      authorId
+      authorName
+      categoryId
+      categoryName
+      primaryImageUrl
+      createdAt
+      updatedAt
+    }
+    page
+    size
+    totalElements
+    totalPages
+    first
+    last
+    sortBy
+    sortDirection
+  }
+}
+
+# 2.2 Buscar libros por título
+query {
+  books(filter: {
+    title: "Harry"
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      title
+      authorName
+    }
+    totalElements
+  }
+}
+
+# 2.3 Buscar libros por autor
+query {
+  books(filter: {
+    authorId: 1
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      title
+      authorName
+    }
+    totalElements
+  }
+}
+
+# 2.4 Buscar libros por categoría
+query {
+  books(filter: {
+    categoryId: 1
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      title
+      categoryName
+    }
+    totalElements
+  }
+}
+
+# 2.5 Buscar libros por año de publicación
+query {
+  books(filter: {
+    publicationYear: 2024
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      title
+      publicationYear
+    }
+    totalElements
+  }
+}
+
+# 2.6 Obtener todos los libros (sin paginación - útil para ver todos)
+query {
+  books(filter: {
+    page: 0
+    size: 1000
+    sortBy: "title"
+  }) {
+    content {
+      id
+      title
+      authorName
+      categoryName
+    }
+    totalElements
+  }
+}
+
+# 2.7 Obtener libro por ID
+query {
+  book(id: 1) {
+    id
+    isbn
+    title
+    publisher
+    publicationYear
+    description
+    authorId
+    authorName
+    categoryId
+    categoryName
+    primaryImageUrl
+    images {
+      id
+      mediaAssetId
+      secureUrl
+      primaryImage
+      sortOrder
+      altText
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+# 2.8 Obtener libro por ISBN
+query {
+  bookByIsbn(isbn: "978-0-06-112008-4") {
+    id
+    isbn
+    title
+    authorName
+    categoryName
+    primaryImageUrl
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 3. QUERIES: AUTHORS (AUTORES)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 3.1 Obtener todos los autores
+query {
+  authors {
+    id
+    idCard
+    fullName
+    nationality
+    biography
+    createdAt
+    updatedAt
+  }
+}
+
+# 3.2 Buscar autores por nombre
+query {
+  authors(fullName: "J.K.") {
+    id
+    fullName
+    nationality
+  }
+}
+
+# 3.3 Obtener autor por ID
+query {
+  author(id: 1) {
+    id
+    idCard
+    fullName
+    nationality
+    biography
+    createdAt
+    updatedAt
+  }
+}
+
+# 3.4 Obtener autor por ID de tarjeta (Cédula)
+query {
+  authorByIdCard(idCard: "12345678") {
+    id
+    fullName
+    nationality
+    biography
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 4. QUERIES: CATEGORIES (CATEGORÍAS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 4.1 Obtener todas las categorías
+query {
+  categories {
+    id
+    name
+    description
+    parentId
+    createdAt
+    updatedAt
+  }
+}
+
+# 4.2 Obtener categorías raíz
+query {
+  categoryRoots {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}
+
+# 4.3 Obtener hijos de una categoría específica
+query {
+  categoryChildren(parentId: 1) {
+    id
+    name
+    description
+    parentId
+    createdAt
+    updatedAt
+  }
+}
+
+# 4.4 Obtener categoría por ID
+query {
+  category(id: 1) {
+    id
+    name
+    description
+    parentId
+    parentName
+    createdAt
+    updatedAt
+  }
+}
+
+# 4.5 Obtener árbol de categorías (nested)
+query {
+  categoryTree(id: 1) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+    children {
+      id
+      name
+      children {
+        id
+        name
+      }
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 5. QUERIES: USERS (USUARIOS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 5.1 Obtener todos los usuarios (requiere auth)
+query {
+  users(filter: {
+    page: 0
+    size: 10
+    sortBy: "username"
+  }) {
+    content {
+      id
+      username
+      role
+    }
+    page
+    size
+    totalElements
+  }
+}
+
+# 5.2 Buscar usuarios por username
+query {
+  users(filter: {
+    username: "admin"
+    page: 0
+    size: 10
+  }) {
+    content {
+      id
+      username
+      role
+    }
+  }
+}
+
+# 5.3 Obtener usuario por ID
+query {
+  user(id: 1) {
+    id
+    username
+    role
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 6. QUERIES: MEDIA ASSETS (IMÁGENES)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 6.1 Obtener todos los assets multimedia
+query {
+  mediaAssets {
+    id
+    publicId
+    secureUrl
+    resourceType
+    format
+    originalFilename
+    contentType
+    sizeInBytes
+    width
+    height
+    createdAt
+  }
+}
+
+# 6.2 Obtener asset por ID
+query {
+  mediaAsset(id: 1) {
+    id
+    publicId
+    secureUrl
+    width
+    height
+    format
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 7. QUERIES: REPORTES (REPORTE POR AUTOR)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 7.1 Obtener reporte de libros por autor
+query {
+  booksByAuthorReport(authorIdCard: "12345678") {
+    authorIdCard
+    authorName
+    generatedAt
+    totalBooks
+    books {
+      bookId
+      isbn
+      title
+      publisher
+      publicationYear
+      categoryName
+      primaryImageUrl
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 8. MUTATIONS: BOOKS (LIBROS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 8.1 Crear un nuevo libro
+mutation {
+  createBook(input: {
+    isbn: "978-0-06-112008-4"
+    title: "Harry Potter and the Sorcerer's Stone"
+    publisher: "Scholastic"
+    publicationYear: 1997
+    description: "Harry Potter discovers his magical heritage and attends Hogwarts School of Witchcraft and Wizardry."
+    authorId: 1
+    categoryId: 1
+  }) {
+    id
+    isbn
+    title
+    publisher
+    publicationYear
+    authorName
+    categoryName
+    primaryImageUrl
+  }
+}
+
+# 8.2 Actualizar un libro existente
+mutation {
+  updateBook(id: 1, input: {
+    isbn: "978-0-06-112008-4"
+    title: "Harry Potter and the Sorcerer's Stone (Updated)"
+    publisher: "Scholastic"
+    publicationYear: 1997
+    description: "Updated description of Harry Potter's first year at Hogwarts."
+    authorId: 1
+    categoryId: 1
+  }) {
+    id
+    title
+    description
+    updatedAt
+  }
+}
+
+# 8.3 Eliminar un libro
+mutation {
+  deleteBook(id: 1) {
+    # Returns true
+  }
+}
+
+# 8.4 Adjuntar imágenes a un libro
+mutation {
+  attachBookImages(bookId: 1, input: {
+    images: [
+      {
+        mediaAssetId: 1
+        primaryImage: true
+        altText: "Portada del libro"
+      }
+      {
+        mediaAssetId: 2
+        primaryImage: false
+        altText: "Interior del libro"
+      }
+    ]
+  }) {
+    id
+    title
+    images {
+      id
+      secureUrl
+      primaryImage
+    }
+  }
+}
+
+# 8.5 Establecer imagen principal de un libro
+mutation {
+  setPrimaryBookImage(bookId: 1, bookImageId: 1) {
+    id
+    title
+    primaryImageUrl
+    images {
+      id
+      secureUrl
+      primaryImage
+    }
+  }
+}
+
+# 8.6 Reordenar imágenes de un libro
+mutation {
+  reorderBookImages(bookId: 1, input: {
+    items: [
+      { bookImageId: 2, sortOrder: 0 }
+      { bookImageId: 1, sortOrder: 1 }
+    ]
+  }) {
+    id
+    title
+    images {
+      id
+      sortOrder
+      secureUrl
+    }
+  }
+}
+
+# 8.7 Eliminar una imagen de un libro
+mutation {
+  removeBookImage(bookId: 1, bookImageId: 2) {
+    # Returns true
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 9. MUTATIONS: AUTHORS (AUTORES)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 9.1 Crear un nuevo autor
+mutation {
+  createAuthor(input: {
+    idCard: "12345678"
+    fullName: "J.K. Rowling"
+    nationality: "British"
+    biography: "British author best known for creating the Harry Potter series."
+  }) {
+    id
+    idCard
+    fullName
+    nationality
+    biography
+    createdAt
+  }
+}
+
+# 9.2 Actualizar un autor
+mutation {
+  updateAuthor(id: 1, input: {
+    idCard: "12345678"
+    fullName: "Joanne Rowling"
+    nationality: "British"
+    biography: "Updated biography."
+  }) {
+    id
+    fullName
+    nationality
+    updatedAt
+  }
+}
+
+# 9.3 Eliminar un autor
+mutation {
+  deleteAuthor(id: 1) {
+    # Returns true
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 10. MUTATIONS: CATEGORIES (CATEGORÍAS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 10.1 Crear una nueva categoría
+mutation {
+  createCategory(input: {
+    name: "Fantasía"
+    description: "Libros de fantasía y magia"
+    parentId: null
+  }) {
+    id
+    name
+    description
+    parentId
+    createdAt
+  }
+}
+
+# 10.2 Crear una subcategoría
+mutation {
+  createCategory(input: {
+    name: "Fantasía Juvenil"
+    description: "Fantasía orientada a jóvenes"
+    parentId: 1
+  }) {
+    id
+    name
+    description
+    parentId
+    createdAt
+  }
+}
+
+# 10.3 Actualizar una categoría
+mutation {
+  updateCategory(id: 1, input: {
+    name: "Fantasía Aventura"
+    description: "Fantasía y aventuras"
+    parentId: null
+  }) {
+    id
+    name
+    description
+    updatedAt
+  }
+}
+
+# 10.4 Eliminar una categoría
+mutation {
+  deleteCategory(id: 1) {
+    # Returns true
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 11. MUTATIONS: USERS (USUARIOS)
+# ────────────────────────────────────────────────────────────────────────────
+
+# 11.1 Crear un nuevo usuario (requiere ADMIN)
+mutation {
+  createUser(input: {
+    username: "nuevo_empleado"
+    password: "password123"
+    role: EMPLOYEE
+  }) {
+    id
+    username
+    role
+  }
+}
+
+# 11.2 Actualizar un usuario
+mutation {
+  updateUser(id: 1, input: {
+    username: "empleado_actualizado"
+    password: "nuevo_password123"
+    role: EMPLOYEE
+  }) {
+    id
+    username
+    role
+  }
+}
+
+# 11.3 Eliminar un usuario
+mutation {
+  deleteUser(id: 1) {
+    # Returns true
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 12. BÚSQUEDA RÁPIDA (SEARCH)
+# ────────────────────────────────────────────────────────────────────────────
+
+# Búsqueda general de libros por texto
+query {
+  searchBooks(query: "Harry", page: 0, size: 10) {
+    content {
+      id
+      title
+      authorName
+      categoryName
+    }
+    totalElements
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 13. PATRÓN: USO COMPLETO DE UN LIBRO DETALLADO
+# ────────────────────────────────────────────────────────────────────────────
+
+query {
+  book(id: 1) {
+    id
+    isbn
+    title
+    publisher
+    publicationYear
+    description
+    author {
+      id
+      fullName
+      nationality
+      biography
+    }
+    category {
+      id
+      name
+      description
+    }
+    images {
+      id
+      mediaAssetId
+      secureUrl
+      primaryImage
+      sortOrder
+      altText
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 14. PATRÓN: USO COMPLETO DE AUTOR DETALLADO
+# ────────────────────────────────────────────────────────────────────────────
+
+query {
+  author(id: 1) {
+    id
+    idCard
+    fullName
+    nationality
+    biography
+    createdAt
+    updatedAt
+    books {
+      id
+      title
+      publisher
+      publicationYear
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 15. PATRÓN: USO COMPLETO DE CATEGORÍA DETALLADA
+# ────────────────────────────────────────────────────────────────────────────
+
+query {
+  category(id: 1) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+    parent {
+      id
+      name
+    }
+    children {
+      id
+      name
+      children {
+        id
+        name
+      }
+    }
+    books {
+      id
+      title
+      authorName
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 16. ESTADÍSTICAS RÁPIDAS
+# ────────────────────────────────────────────────────────────────────────────
+
+# Contar libros por categoría
+query {
+  books(filter: { page: 0, size: 0 }) {
+    content {
+      categoryId
+      categoryName
+    }
+    totalElements
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 17. ORDENAMIENTO Y FILTRADO AVANZADO
+# ────────────────────────────────────────────────────────────────────────────
+
+# Libros ordenados por título (descendente)
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "title"
+    sortDir: "desc"
+  }) {
+    content {
+      title
+      authorName
+    }
+  }
+}
+
+# Libros ordenados por año de publicación (ascendente)
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "publicationYear"
+    sortDir: "asc"
+  }) {
+    content {
+      title
+      publicationYear
+    }
+  }
+}
+
+# Libros ordenados por nombre de categoría
+query {
+  books(filter: {
+    page: 0
+    size: 10
+    sortBy: "categoryName"
+    sortDir: "asc"
+  }) {
+    content {
+      title
+      categoryName
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 18. CONSULTA INTROSPECCIÓN COMPLETA
+# ────────────────────────────────────────────────────────────────────────────
+
+query {
+  __schema {
+    queryType { name }
+    mutationType { name }
+    types {
+      name
+      kind
+      description
+      fields {
+        name
+        description
+        args {
+          name
+          type {
+            name
+          }
+          defaultValue
+        }
+        type {
+          name
+        }
+      }
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 19. EJEMPLO DE MULTI-QUERY (TODAS LAS ENTIDADES)
+# ────────────────────────────────────────────────────────────────────────────
+
+query {
+  books(filter: { page: 0, size: 5 }) {
+    content {
+      id
+      title
+      authorName
+    }
+  }
+  authors {
+    id
+    fullName
+  }
+  categories {
+    id
+    name
+  }
+  users(filter: { page: 0, size: 5 }) {
+    content {
+      id
+      username
+      role
+    }
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# 20. EJEMPLO DE TRANSACCIÓN (CREAR LIBRO Y ASOCIAR CATEGORÍA)
+# ────────────────────────────────────────────────────────────────────────────
+
+mutation {
+  # Primer paso: Crear libro
+  createBook(input: {
+    isbn: "978-1-4028-9462-6"
+    title: "The Hobbit"
+    publisher: "Houghton Mifflin"
+    publicationYear: 1937
+    description: "Bilbo Baggins enjoys a comfortable, unambitious life, rarely travelling further than the pantry."
+    authorId: 2
+    categoryId: 3
+  }) {
+    id
+    title
+    isbn
+  }
+}
+
+# ────────────────────────────────────────────────────────────────────────────
+# NOTAS IMPORTANTES:
+# ────────────────────────────────────────────────────────────────────────────
+#
+# 1. La mayoría de los queries requieren autenticación JWT (excepto los públicos)
+# 2. Los mutations requieren autenticación JWT y permisos específicos
+#    - Libros: EMPLOYEE o ADMIN
+#    - Usuarios: ADMIN solo
+#    - Categorías: EMPLOYEE o ADMIN
+#    - Autores: EMPLOYEE o ADMIN
+#
+# 3. Los endpoints públicos están:
+#    - /graphql (requiere autenticación para la mayoría de queries)
+#    - /graphiql (requiere GRAPHIQL_ENABLED=true en .env)
+#
+# 4. Para obtener el token JWT:
+#    POST /api/auth/login
+#    {
+#      "username": "admin",
+#      "password": "tu_password"
+#    }
+#
+# 5. Headers para queries con autenticación:
+#    Authorization: Bearer <tu_token>
+#
+# 6. Para probar sin autenticación en GraphiQL:
+#    - Configura GraphiQL para enviar el token automáticamente
+#    - O usa el endpoint /graphql directamente
+#
+# ────────────────────────────────────────────────────────────────────────────
+# END OF FILE
+# ────────────────────────────────────────────────────────────────────────────
